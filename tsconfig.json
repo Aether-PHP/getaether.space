@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "public/js/",
+    "target": "ES2015",
+    "strict": true
+  },
+  "files": [
+    "public/js/home.ts",
+    "public/js/docs.ts"
+    "public/js/langSwitcher.ts"
+  ]
+}

@@ -1,0 +1,49 @@
+<?php
+
+/*
+ *
+ *      █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗         ██████╗ ██╗  ██╗██████╗
+ *     ██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗        ██╔══██╗██║  ██║██╔══██╗
+ *     ███████║█████╗     ██║   ███████║█████╗  ██████╔╝ █████╗ ██████╔╝███████║██████╔╝
+ *     ██╔══██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗ ╚════╝ ██╔═══╝ ██╔══██║██╔═══╝
+ *     ██║  ██║███████╗   ██║   ██║  ██║███████╗██║  ██║        ██║     ██║  ██║██║
+ *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
+ *
+ *                      The divine lightweight PHP framework
+ *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *
+ *  Built from scratch. No bloat. OOP Embedded.
+ *
+ *  @author: dawnl3ss (Alex') ©2025 — All rights reserved
+ *  Source available • Commercial license required for redistribution
+ *  → github.com/dawnl3ss/Aether-PHP
+ *
+*/
+declare(strict_types=1);
+
+namespace Aether\Router\Controller;
+
+use Aether\View\ViewInstance;
+
+
+class Controller {
+
+    /**
+     * Render the provided view (with parameters)
+     *
+     * @param string $_view
+     * @param array $_params
+     */
+    protected function _render(string $_view, array $_params = []) {
+        ViewInstance::_make($_view, $_params);
+    }
+
+    /**
+     * Redirect the user to $_path
+     *
+     * @param string $_path
+     */
+    protected function _redirect(string $_path){
+        header("Location: $_path");
+    }
+}

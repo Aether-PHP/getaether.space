@@ -1,0 +1,116 @@
+{
+  "home": {
+    "main_title": "Æther PHP",
+    "main_description": "The divine lightweight PHP framework engineered for fast, secure backends",
+
+    "hero": {
+      "status": "PHP 8.3+&nbsp;&nbsp;/&nbsp;&nbsp;OOP&nbsp;&nbsp;/&nbsp;&nbsp;Secure by design&nbsp;&nbsp;/&nbsp;&nbsp;2ms boot&nbsp;&nbsp;/&nbsp;&nbsp;Zero deps",
+      "about_label": "About",
+      "about_text": "Built from scratch for speed and security.<br/>No Composer. No bloat. No magic.<br/>Pure PHP backends you can ship fast.",
+      "start_label": "Start here",
+      "btn_github": "View on GitHub",
+      "btn_get_started": "Get Started →",
+      "btn_docs": "Docs",
+      "specs_label": "Specs",
+      "spec_size": "Size",
+      "spec_size_value": "&lt; 1 MB",
+      "spec_deps": "Dependencies",
+      "spec_deps_value": "0",
+      "spec_php": "PHP",
+      "spec_php_value": "8.3+",
+      "spec_arch": "Architecture",
+      "spec_arch_value": "OOP · MVC",
+      "spec_perf": "Boot time",
+      "spec_perf_value": "2ms cold / 1ms warm"
+    },
+
+    "philosophy": {
+      "label": "01 - Philosophy",
+      "title": "Fast.<br/><em>Secure.<br/>Easy to use.</em>",
+      "lead": "Aether delivers ultra-fast, secure backends without the usual framework bloat. Built for freelancers and indie developers who need to ship quality backends quickly - without compromising on security or performance.",
+      "pillar_1_num": "I",
+      "pillar_1_title": "Ultra-fast performance",
+      "pillar_1_text": "2ms cold boot, 1ms warm. Under 1MB of source. Zero runtime dependencies. Deploy anywhere, run instantly - no build steps, no vendor lock-in.",
+      "pillar_2_num": "II",
+      "pillar_2_title": "Security-first design",
+      "pillar_2_text": "HMAC-signed sessions, Argon2ID password hashing, CSRF protection, rate limiting, CSP headers, and prepared statements only. Security isn't optional - it's built in.",
+      "pillar_3_num": "III",
+      "pillar_3_title": "Easy to use and deploy",
+      "pillar_3_text": "Clone, configure, deploy. No package manager required. No hidden complexity. Build full backends quickly with clean, readable code that you actually understand."
+    },
+
+    "examples": {
+      "label": "02 - Syntax",
+      "title": "Clean code. <em>Fast results.</em>",
+      "subtitle": "Build SaaS platforms, REST APIs, e-commerce sites, blogs, and specialized services with minimal boilerplate.",
+      "card_1_title": "Basic view rendering",
+      "card_2_title": "Simple JSON endpoint",
+      "card_3_title": "Secure user fetching with auth"
+    },
+
+    "security": {
+      "label": "03 - Security Model",
+      "title": "Security<br/><em>built in,<br/>not bolted on.</em>",
+      "intro": "Aether is security-oriented by design. Every authentication flow, every session, every database query is protected from the ground up - so you can focus on building features, not patching vulnerabilities.",
+      "card_1_title": "HMAC-Signed Sessions",
+      "card_1_text": "Session payloads are integrity-protected using HMAC signatures. Tampered sessions are rejected before they reach your code - automatic protection with zero configuration.",
+      "card_2_title": "Argon2ID Password Hashing",
+      "card_2_text": "Modern, secure password hashing out of the box. No weak defaults, no deprecated algorithms - just industry-standard protection that works immediately.",
+      "card_3_title": "Security Middlewares",
+      "card_3_text": "Rate limiting, CSP headers, secure PHP.ini parameters, and CSRF token checking. All opt-in, all composable, all production-ready from day one.",
+      "card_4_title": "Permission Layer",
+      "card_4_text": "Built-in role system with default user and admin permissions. Extend it for your needs or use it as-is - authorization is explicit, typed, and auditable.",
+      "code_title": "Auth check - secure by default"
+    },
+
+    "features": {
+      "label": "04 - Core Features",
+      "title": "Everything you need<br/><em>to ship fast.</em>",
+      "f1_title": "Annotation-Driven Router",
+      "f1_text": "Define routes directly in controller docblocks. No config files, no separate routing layer - routes live with the code they serve.",
+      "f2_title": "Security Middlewares",
+      "f2_text": "Rate limiting, CSRF protection, CSP headers - all ready to use. Composable, testable, and designed to keep your app secure from day one.",
+      "f3_title": "Secure Session Management",
+      "f3_text": "HMAC-signed sessions with centralized access. No scattered <code>$_SESSION</code> calls - just clean, secure session handling throughout your app.",
+      "f4_title": "Built-in Auth Layer",
+      "f4_text": "Argon2ID password hashing, permission-based roles, and ready-to-use login/register/logout flows. Secure authentication without the setup headache.",
+      "f5_title": "Zero Runtime Dependencies",
+      "f5_text": "No Composer packages at runtime. No vendor folder bloat. Pure PHP that deploys in seconds - perfect for shared hosting or containerized environments.",
+      "f6_title": "Modern PHP 8.3",
+      "f6_text": "Leverages enums, typed properties, readonly classes, and named arguments. Not retrofitted - built from the ground up for modern PHP.",
+      "f7_title": "Database Wrapper",
+      "f7_text": "Query builder with prepared statements only. SQL injection protection is automatic - clean syntax, secure by design, no raw queries.",
+      "f8_title": "CLI Power Tools",
+      "f8_text": "Generate controllers, run scripts, bootstrap projects with <code>php bin/aether</code>. Fast scaffolding with zero configuration ceremony."
+    },
+
+    "vision": {
+      "label": "05 - Who Is It For?",
+      "quote": "Built for developers who need<br/>to ship quality backends fast.",
+      "body_1": "Aether is designed for freelance developers delivering client projects and indie developers working on SaaS, REST APIs, e-commerce platforms, blogs, community apps, and specialized services.",
+      "body_2": "No enterprise complexity. No framework magic. Just clean PHP you can understand, audit, and deploy in minutes - perfect for projects where speed, security, and simplicity matter most.",
+      "tag_1": "Freelancers",
+      "tag_2": "Indie Devs",
+      "tag_3": "SaaS",
+      "tag_4": "REST APIs",
+      "tag_5": "E-Commerce"
+    },
+
+    "start": {
+      "label": "06 - Get Started",
+      "title": "Shipping in <em>minutes.</em>",
+      "desc": "Clone, configure, deploy. No package manager. No build step. No ceremony. Start building secure, high-performance backends right now.",
+      "btn_github": "View on GitHub",
+      "step_1_title": "Clone the repository",
+      "step_2_title": "Configure your environment",
+      "step_2_comment": "Edit .env with your DB credentials and app settings",
+      "step_3_title": "Generate your first controller",
+      "step_4_title": "Point your server to the root",
+      "step_4_text": "Configure Apache or Nginx to rewrite URLs to <code>index.php</code>. You're live - secure, fast, and ready to build.",
+      "requirements_title": "Requirements",
+      "req_php": "PHP 8.3+",
+      "req_pdo": "PDO extension",
+      "req_url": "URL rewriting (Apache / Nginx)"
+    }
+  }
+}

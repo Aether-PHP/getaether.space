@@ -1,0 +1,116 @@
+{
+  "home": {
+    "main_title": "Æther PHP",
+    "main_description": "Le framework PHP minimaliste conçu pour des backends rapides et sécurisés",
+
+    "hero": {
+      "status": "PHP 8.3+&nbsp;&nbsp;/&nbsp;&nbsp;POO&nbsp;&nbsp;/&nbsp;&nbsp;Sécurisé par conception&nbsp;&nbsp;/&nbsp;&nbsp;Démarrage 2ms&nbsp;&nbsp;/&nbsp;&nbsp;Zéro dépendance",
+      "about_label": "À propos",
+      "about_text": "Développé de zéro pour la vitesse et la sécurité.<br/>Pas de Composer. Pas de poids mort. Pas de magie.<br/>Des backends PHP purs que tu peux déployer rapidement.",
+      "start_label": "Commencer ici",
+      "btn_github": "Voir sur GitHub",
+      "btn_get_started": "Démarrer →",
+      "btn_docs": "Documentation",
+      "specs_label": "Caractéristiques",
+      "spec_size": "Taille",
+      "spec_size_value": "&lt; 1 Mo",
+      "spec_deps": "Dépendances",
+      "spec_deps_value": "0",
+      "spec_php": "PHP",
+      "spec_php_value": "8.3+",
+      "spec_arch": "Architecture",
+      "spec_arch_value": "POO · MVC",
+      "spec_perf": "Temps de démarrage",
+      "spec_perf_value": "2ms à froid / 1ms à chaud"
+    },
+
+    "philosophy": {
+      "label": "01 - Philosophie",
+      "title": "Rapide.<br/><em>Sécurisé.<br/>Simple d'utilisation.</em>",
+      "lead": "Aether délivre des backends ultra-rapides et sécurisés sans le poids habituel des frameworks. Conçu pour les freelances et développeurs indépendants qui doivent livrer des backends de qualité rapidement - sans compromis sur la sécurité ou les performances.",
+      "pillar_1_num": "I",
+      "pillar_1_title": "Performances ultra-rapides",
+      "pillar_1_text": "Démarrage à froid en 2ms, 1ms à chaud. Moins de 1Mo de source. Zéro dépendance à l'exécution. Déploie où tu veux, tourne instantanément - pas d'étape de build, pas de vendor lock-in.",
+      "pillar_2_num": "II",
+      "pillar_2_title": "Conception axée sécurité",
+      "pillar_2_text": "Sessions signées HMAC, hachage de mots de passe Argon2ID, protection CSRF, limitation de débit, en-têtes CSP, et requêtes préparées uniquement. La sécurité n'est pas optionnelle - elle est intégrée.",
+      "pillar_3_num": "III",
+      "pillar_3_title": "Facile à utiliser et déployer",
+      "pillar_3_text": "Clone, configure, déploie. Pas besoin de gestionnaire de paquets. Pas de complexité cachée. Construis des backends complets rapidement avec du code propre et lisible que tu comprends vraiment."
+    },
+
+    "examples": {
+      "label": "02 - Syntaxe",
+      "title": "Code propre. <em>Résultats rapides.</em>",
+      "subtitle": "Construis des plateformes SaaS, API REST, sites e-commerce, blogs et services spécialisés avec un minimum de code inutile.",
+      "card_1_title": "Rendu de vue basique",
+      "card_2_title": "Endpoint JSON simple",
+      "card_3_title": "Récupération sécurisée d'utilisateur avec auth"
+    },
+
+    "security": {
+      "label": "03 - Modèle de sécurité",
+      "title": "La sécurité<br/><em>intégrée,<br/>pas ajoutée après coup.</em>",
+      "intro": "Aether est orienté sécurité par conception. Chaque flux d'authentification, chaque session, chaque requête en base est protégée dès le départ - tu peux te concentrer sur les fonctionnalités, pas sur le colmatage des failles.",
+      "card_1_title": "Sessions signées HMAC",
+      "card_1_text": "Les données de session sont protégées en intégrité via des signatures HMAC. Les sessions altérées sont rejetées avant d'atteindre ton code - protection automatique sans aucune configuration.",
+      "card_2_title": "Hachage de mots de passe Argon2ID",
+      "card_2_text": "Hachage de mots de passe moderne et sécurisé dès le départ. Pas de paramètres faibles par défaut, pas d'algorithmes obsolètes - juste une protection aux standards de l'industrie qui fonctionne immédiatement.",
+      "card_3_title": "Middlewares de sécurité",
+      "card_3_text": "Limitation de débit, en-têtes CSP, paramètres PHP.ini sécurisés, et vérification de jetons CSRF. Tout est opt-in, tout est composable, tout est prêt pour la production dès le premier jour.",
+      "card_4_title": "Couche de permissions",
+      "card_4_text": "Système de rôles intégré avec permissions utilisateur et admin par défaut. Étends-le selon tes besoins ou utilise-le tel quel - l'autorisation est explicite, typée et auditable.",
+      "code_title": "Vérification d'authentification - sécurisé par défaut"
+    },
+
+    "features": {
+      "label": "04 - Fonctionnalités principales",
+      "title": "Tout ce dont tu as besoin<br/><em>pour livrer vite.</em>",
+      "f1_title": "Routeur piloté par annotations",
+      "f1_text": "Définis tes routes directement dans les docblocks des contrôleurs. Pas de fichiers de config, pas de couche de routage séparée - les routes vivent avec le code qu'elles servent.",
+      "f2_title": "Middlewares de sécurité",
+      "f2_text": "Limitation de débit, protection CSRF, en-têtes CSP - tout est prêt à l'emploi. Composable, testable, et conçu pour garder ton app sécurisée dès le premier jour.",
+      "f3_title": "Gestion sécurisée des sessions",
+      "f3_text": "Sessions signées HMAC avec accès centralisé. Pas d'appels <code>$_SESSION</code> éparpillés - juste une gestion de session propre et sécurisée dans toute ton app.",
+      "f4_title": "Couche d'authentification intégrée",
+      "f4_text": "Hachage de mots de passe Argon2ID, rôles basés sur les permissions, et flux login/register/logout prêts à l'emploi. Authentification sécurisée sans les tracas de configuration.",
+      "f5_title": "Zéro dépendance à l'exécution",
+      "f5_text": "Pas de paquets Composer à l'exécution. Pas de dossier vendor qui gonfle. Du PHP pur qui se déploie en quelques secondes - parfait pour l'hébergement mutualisé ou les environnements conteneurisés.",
+      "f6_title": "PHP 8.3 moderne",
+      "f6_text": "Exploite les enums, propriétés typées, classes readonly et arguments nommés. Pas adapté rétroactivement - construit de zéro pour le PHP moderne.",
+      "f7_title": "Wrapper de base de données",
+      "f7_text": "Query builder avec requêtes préparées uniquement. La protection contre l'injection SQL est automatique - syntaxe propre, sécurisé par conception, pas de requêtes brutes.",
+      "f8_title": "Outils CLI puissants",
+      "f8_text": "Génère des contrôleurs, lance des scripts, bootstrap des projets avec <code>php bin/aether</code>. Scaffolding rapide sans cérémonie de configuration."
+    },
+
+    "vision": {
+      "label": "05 - Pour qui ?",
+      "quote": "Conçu pour les développeurs qui doivent<br/>livrer des backends de qualité rapidement.",
+      "body_1": "Aether est pensé pour les développeurs freelances qui livrent des projets clients et les développeurs indépendants qui travaillent sur du SaaS, des API REST, des plateformes e-commerce, des blogs, des apps communautaires et des services spécialisés.",
+      "body_2": "Pas de complexité enterprise. Pas de magie de framework. Juste du PHP propre que tu peux comprendre, auditer et déployer en quelques minutes - parfait pour les projets où la vitesse, la sécurité et la simplicité comptent le plus.",
+      "tag_1": "Freelances",
+      "tag_2": "Devs Indés",
+      "tag_3": "SaaS",
+      "tag_4": "API REST",
+      "tag_5": "E-Commerce"
+    },
+
+    "start": {
+      "label": "06 - Démarrage",
+      "title": "En prod <em>en quelques minutes.</em>",
+      "desc": "Clone, configure, déploie. Pas de gestionnaire de paquets. Pas d'étape de build. Pas de cérémonie. Commence à construire des backends sécurisés et performants maintenant.",
+      "btn_github": "Voir sur GitHub",
+      "step_1_title": "Clone le dépôt",
+      "step_2_title": "Configure ton environnement",
+      "step_2_comment": "Édite .env avec tes identifiants DB et paramètres d'app",
+      "step_3_title": "Génère ton premier contrôleur",
+      "step_4_title": "Pointe ton serveur vers la racine",
+      "step_4_text": "Configure Apache ou Nginx pour réécrire les URLs vers <code>index.php</code>. Tu es en ligne - sécurisé, rapide, et prêt à construire.",
+      "requirements_title": "Prérequis",
+      "req_php": "PHP 8.3+",
+      "req_pdo": "Extension PDO",
+      "req_url": "Réécriture d'URL (Apache / Nginx)"
+    }
+  }
+}

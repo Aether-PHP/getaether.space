@@ -1,0 +1,13 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]
+
+<FilesMatch ".json">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
