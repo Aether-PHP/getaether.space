@@ -9,7 +9,7 @@
       "about_text": "Built from scratch for speed and security.<br/>No Composer. No bloat. No magic.<br/>Pure PHP backends you can ship fast.",
       "start_label": "Start here",
       "btn_github": "View on GitHub",
-      "btn_get_started": "Get Started →",
+      "btn_get_started": "Download →",
       "btn_docs": "Docs",
       "specs_label": "Specs",
       "spec_size": "Size",
@@ -86,7 +86,7 @@
 
     "vision": {
       "label": "05 - Who Is It For?",
-      "quote": "Built for developers who need<br/>to ship quality backends fast.",
+      "quote": "Built for developers who need to ship quality backends fast.",
       "body_1": "Aether is designed for freelance developers delivering client projects and indie developers working on SaaS, REST APIs, e-commerce platforms, blogs, community apps, and specialized services.",
       "body_2": "No enterprise complexity. No framework magic. Just clean PHP you can understand, audit, and deploy in minutes - perfect for projects where speed, security, and simplicity matter most.",
       "tag_1": "Freelancers",

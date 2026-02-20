@@ -13,7 +13,7 @@
             <a href="#security">Security</a>
             <a href="#features">Features</a>
             <a href="#start">Get Started</a>
-            <a href="/<?= $lang; ?>/modules" class="nav__cta" rel="noopener">Modules</a>
+            <a href="/<?= $lang; ?>/download" class="nav__cta" rel="noopener">Download</a>
             <a href="/<?= $lang; ?>/docs" class="nav__cta" rel="noopener">Documentation</a>
 
             <div class="lang-switcher" id="lang-switcher" role="navigation" aria-label="Language selector">

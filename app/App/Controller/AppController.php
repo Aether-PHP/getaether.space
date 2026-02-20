@@ -59,15 +59,4 @@ class AppController extends Controller {
         ]);
     }
 
-    /**
-     * [@method] => GET
-     * [@route] => /download
-     */
-    public function download($language){
-        if (!I18N::_setLanguage($language))
-            $this->_redirect("/en/download");
-
-        $this->_render("download");
-    }
-
 }

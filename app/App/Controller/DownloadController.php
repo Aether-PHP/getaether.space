@@ -31,6 +31,16 @@ use Aether\Router\Controller\Controller;
  */
 class DownloadController extends Controller {
 
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function download($language){
+        if (!I18N::_setLanguage($language))
+            $this->_redirect("/en/download");
+
+        $this->_render("download", [ "lang" => I18N::_getCurrentLanguage() ]);
+    }
 
 
 }

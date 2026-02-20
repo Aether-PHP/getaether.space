@@ -1,0 +1,1404 @@
+================================================================================
+AETHER-PHP FRAMEWORK - COMPLETE DOCUMENTATION PLAN
+================================================================================
+
+This document contains the complete plan for writing the Aether-PHP framework
+documentation. Each section includes the exact text to write, code examples to
+include, comments, and tips. The order is clean and progressive, from basic
+usage to advanced features.
+
+================================================================================
+SECTION 1: INTRODUCTION AND GETTING STARTED
+================================================================================
+
+1.1 Title and Introduction
+Write: "Aether-PHP Framework Documentation"
+Write: "Welcome to Aether-PHP, a lightweight, zero-dependency PHP framework
+built from scratch. This documentation will guide you through using the
+framework from basic to advanced levels."
+
+1.2 Requirements
+Write: "Before you begin, ensure you have:"
+Write: "- PHP 8.3 or higher"
+Write: "- A web server (Apache, Nginx, or PHP built-in server)"
+Write: "- MySQL or SQLite database (optional, for database features)"
+Write: "- APCU extension (optional, for caching features)"
+
+1.3 Installation
+Write: "To get started with Aether-PHP:"
+Write: "1. Clone or download the framework"
+Write: "2. Point your web server document root to the 'public' directory"
+Write: "3. Configure your .env file (see Configuration section)"
+Write: "4. Access your application through the web server"
+
+Include code example:
+# - The entry point is /index.php which automatically loads everything
+# - No additional setup required - just point your server to /index.php
+
+Tip: Mention that the framework uses a custom autoloader, so no Composer is needed.
+
+================================================================================
+SECTION 2: CONFIGURATION
+================================================================================
+
+2.1 Environment Variables
+Write: "Aether-PHP uses a .env file for configuration. Create a .env file in
+the root directory with the following variables:"
+
+Include code example:
+APP_ENV=dev
+PROJECT_NAME=MyApp
+DATABASE_ADDRESS=localhost
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=your_password
+AUTH_DATABASE_GATEWAY=my_database
+AUTH_TABLE_GATEWAY=users
+SESSION_HMAC=your_secret_key_at_least_32_characters_long
+
+Write: "APP_ENV can be 'dev' or 'prod'. In dev mode, errors are displayed.
+In prod mode, errors are hidden for security."
+
+Write: "SESSION_HMAC is used to sign session data. Use a long, random string
+for security. Generate one using: openssl rand -hex 32"
+
+Tip: Emphasize that SESSION_HMAC should never be committed to version control.
+
+2.2 Accessing Configuration
+Write: "You can access configuration values anywhere in your application:"
+
+Include code example:
+$dbHost = Aether()->_config()->_get('DATABASE_ADDRESS');
+$appName = Aether()->_config()->_get('PROJECT_NAME');
+# - Same as :
+$dbHost = $_ENV["DATABASE_ADDRESS"];
+$appName = $_ENV["PROJECT_NAME"];
+
+Write: "The _get() method returns the value from $_ENV array. If the key
+doesn't exist, it returns null."
+
+================================================================================
+SECTION 3: ROUTING BASICS
+================================================================================
+
+3.1 Understanding Routes
+Write: "Aether-PHP uses annotation-based routing. Routes are defined using
+PHP DocBlock comments in your controller classes. The framework automatically
+scans controllers and registers routes."
+
+Write: "Controllers are located in:"
+Write: "- app/App/Controller/ for web controllers"
+Write: "- app/App/Controller/Api/ for API controllers"
+
+3.2 Creating Your First Route
+Write: "Let's create a simple route. Create a file app/App/Controller/HomeController.php:"
+
+Include code example:
+<?php
+namespace App\Controller;
+
+use Aether\Router\Controller\Controller;
+
+class HomeController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function index() {
+        echo "Hello, Aether-PHP!";
+    }
+}
+
+Write: "This creates a GET route at the root URL (/). When someone visits
+your site, this method will be called."
+
+Write: "The annotations work as follows:"
+Write: "- [@method] => HTTP method (GET, POST, PUT, DELETE)"
+Write: "- [@route] => URL path"
+Write: "Note: The square brackets and @ symbols are literal - include them exactly as shown."
+
+Tip: Routes are case-sensitive. /Home and /home are different routes.
+
+3.3 Route Parameters
+Write: "You can capture URL parameters using curly braces:"
+
+Include code example:
+/**
+ * [@method] => GET
+ * [@route] => /user/{id}
+ */
+public function showUser($id) {
+    echo "User ID: " . $id;
+}
+
+Write: "When someone visits /user/123, the $id parameter will contain '123'."
+Write: "Parameters are automatically sanitized to prevent XSS attacks."
+
+Write: "You can have multiple parameters:"
+
+Include code example:
+/**
+ * [@method] => GET
+ * [@route] => /user/{userId}/post/{postId}
+ */
+public function showPost($userId, $postId) {
+    # - Parameters are passed in the order they appear in the route
+    echo "User: $userId, Post: $postId";
+}
+
+Tip: Route parameters only work with GET requests. For POST/PUT/DELETE, use
+request body data instead.
+
+3.4 Base Paths
+Write: "For API controllers, you often want a base path prefix. Use the
+[@base] annotation on the class:"
+
+Include code example:
+/**
+ * [@base] => /api/v1
+ */
+class ApiController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /users
+     */
+    public function getUsers() {
+        # - This route becomes: GET /api/v1/users
+    }
+}
+
+Write: "The base path is used for all routes in that controller."
+
+Tip: Use base paths to version your APIs. You can have /api/v1 and /api/v2
+controllers separately.
+
+================================================================================
+SECTION 4: CONTROLLERS AND RESPONSES
+================================================================================
+
+4.1 Controller Structure
+Write: "All controllers must extend Aether\Router\Controller\Controller.
+The base Controller class provides helper methods for rendering views and accessing services."
+
+Write: "Your controller methods can return:"
+Write: "- Nothing (void) - output is sent directly"
+Write: "- HTTP Response objects (for APIs)"
+Write: "- View rendering (for web pages)"
+
+4.2 Returning JSON Responses
+Write: "For API endpoints, return JSON responses:"
+
+Include code example:
+
+/**
+ * [@method] => GET
+ * [@route] => /api/users
+ */
+public function getUsers() {
+    $users = [
+        ['id' => 1, 'name' => 'John'],
+        ['id' => 2, 'name' => 'Jane']
+    ];
+    
+    return Aether()->_http()->_response()->_json($users, 200)->_send();
+}
+
+Write: "The _json() method takes two parameters:"
+Write: "- First: the data to encode (array or object)"
+Write: "- Second: HTTP status code (200, 201, 404, etc.)"
+Write: "Always call ->_send() at the end to output the response."
+
+Write: "Common status codes:"
+Write: "- 200: OK"
+Write: "- 201: Created"
+Write: "- 400: Bad Request"
+Write: "- 404: Not Found"
+Write: "- 500: Internal Server Error"
+
+4.3 Other Response Formats
+Write: "Aether-PHP supports multiple response formats:"
+
+Include code example:
+# - HTML response
+Aether()->_http()->_response()->_html('<h1>Hello</h1>', 200)->_send();
+
+# - XML response
+Aether()->_http()->_response()->_xml('<root><item>data</item></root>', 200)->_send();
+
+# - Plain text response
+Aether()->_http()->_response()->_text('Hello World', 200)->_send();
+
+# - PDF response
+Aether()->_http()->_response()->_pdf($pdfContent, 200)->_send();
+
+Tip: The framework automatically sets appropriate Content-Type headers for
+each format.
+
+4.4 Rendering Views
+Write: "For web pages, render views using the _render() method:"
+
+Include code example:
+
+/**
+ * [@method] => GET
+ * [@route] => /
+ */
+public function home() {
+    $this->_render('home', [
+        'title' => 'Welcome',
+        'user' => ['name' => 'John']
+    ]);
+}
+
+Write: "The first parameter is the view name (without .php extension)."
+Write: "The second parameter is an array of variables to pass to the view."
+Write: "Views are located in public/views/ directory."
+
+Write: "In your view file (public/views/home.php), variables are available
+as regular PHP variables:"
+
+Include code example:
+<h1><?php echo $title; ?></h1>
+<p>Hello, <?php echo $user['name']; ?>!</p>
+
+Tip: Views use PHP's extract() function, so array keys become variable names.
+
+================================================================================
+SECTION 5: DATABASE OPERATIONS
+================================================================================
+
+5.1 Connecting to Database
+Write: "Aether-PHP supports MySQL and SQLite databases. Access the database
+through the ServiceManager:"
+
+Include code example:
+# - MySQL connection
+$db = Aether()->_db()->_mysql('database_name');
+
+# - SQLite connection
+$db = Aether()->_db()->_sqlite('path/to/database.db');
+
+Write: "The database name for MySQL should match your database name."
+Write: "For SQLite, provide the full path to the .db file."
+
+Tip: Connections are cached, so calling _mysql() multiple times with the
+same database name returns the same connection.
+
+5.2 Basic SELECT Queries
+Write: "Use the QueryBuilder for type-safe database queries:"
+
+Include code example:
+$users = $db->_table('users')
+    ->_select('*')
+    ->_send();
+
+Write: "This executes: SELECT * FROM users"
+Write: "The _send() method executes the query and returns results."
+
+Write: "Select specific columns:"
+
+Include code example:
+$users = $db->_table('users')
+    ->_select('id', 'name', 'email')
+    ->_send();
+
+Write: "Or pass an array:"
+
+Include code example:
+$users = $db->_table('users')
+    ->_select(['id', 'name', 'email'])
+    ->_send();
+
+5.3 WHERE Clauses
+Write: "Add conditions using _where():"
+
+Include code example:
+$user = $db->_table('users')
+    ->_select('*')
+    ->_where('id', 1)
+    ->_send();
+
+Write: "This executes: SELECT * FROM users WHERE id = 1"
+Write: "Results are returned as an array of associative arrays."
+
+Write: "Chain multiple WHERE clauses (they are combined with AND):"
+
+Include code example:
+$users = $db->_table('users')
+    ->_select('*')
+    ->_where('status', 'active')
+    ->_where('role', 'admin')
+    ->_send();
+
+Write: "This executes: SELECT * FROM users WHERE status = 'active' AND role = 'admin'"
+
+Tip: All values are automatically parameterized to prevent SQL injection. In reality, such query would execute: SELECT * FROM `users` WHERE status = :status AND role = :admin,
+        all pairs of key/value are inputted in prepared statements.
+
+5.4 INSERT Queries
+Write: "Insert data using _insert():"
+
+Include code example:
+$db->_table('users')
+    ->_insert('name', 'John Doe')
+    ->_insert('email', 'john@example.com')
+    ->_insert('password', 'hashed_password')
+    ->_send();
+
+Write: "This executes: INSERT INTO users (name, email, password) VALUES (:name, :email, :password)"
+Write: "Chain multiple _insert() calls to add multiple columns."
+
+Tip: The framework uses prepared statements, so your data is safe from SQL injection.
+
+5.5 UPDATE Queries
+Write: "Update records using _update() and _set():"
+
+Include code example:
+$db->_table('users')
+    ->_update()
+    ->_set('name', 'Jane Doe')
+    ->_set('email', 'jane@example.com')
+    ->_where('id', 1)
+    ->_send();
+
+Write: "This executes: UPDATE users SET name = :set_name, email = :set_email WHERE id = :id"
+Write: "Always include a _where() clause to avoid updating all rows!"
+
+Warning: Forgetting _where() in UPDATE queries will update ALL rows in the table.
+
+5.6 DELETE Queries
+Write: "Delete records using _delete():"
+
+Include code example:
+$db->_table('users')
+    ->_delete()
+    ->_where('id', 1)
+    ->_send();
+
+Write: "This executes: DELETE FROM users WHERE id = :id"
+Write: "Always include a _where() clause!"
+
+Warning: Forgetting _where() in DELETE queries will delete ALL rows in the table.
+
+5.7 Checking Existence
+Write: "Check if a record exists using _exist():"
+
+Include code example:
+$exists = $db->_table('users')
+    ->_exist()
+    ->_where('email', 'test@example.com')
+    ->_send();
+
+Write: "This returns true if the record exists, false otherwise."
+Write: "Useful for validation before inserting new records."
+
+5.8 JOIN Queries
+Write: "Perform JOINs using _join():"
+
+Include code example:
+$results = $db->_table('users')
+    ->_select('users.name', 'posts.title')
+    ->_join('posts', 'users.id = posts.user_id')
+    ->_send();
+
+Write: "This executes: SELECT users.name, posts.title FROM users INNER JOIN posts ON users.id = posts.user_id"
+Write: "You can chain multiple _join() calls for multiple JOINs."
+
+5.9 Raw SQL Queries
+Write: "For complex queries, use _raw():"
+
+Include code example:
+$results = $db->_raw('SELECT COUNT(*) as total FROM users WHERE created_at > DATE_SUB(NOW(), INTERVAL 1 MONTH)');
+
+Write: "Use _raw() sparingly and only when the QueryBuilder can't handle your
+query. Always validate and sanitize any user input used in raw queries."
+
+Tip: Even with _raw(), consider using parameterized queries for user input.
+
+================================================================================
+SECTION 6: AUTHENTICATION
+================================================================================
+
+6.1 User Registration
+Write: "Aether-PHP provides built-in authentication. To register a new user:"
+
+Include code example:
+use Aether\Auth\Gateway\RegisterAuthGateway;
+
+$gateway = new RegisterAuthGateway($username, $email, $password);
+
+if ($gateway->_tryAuth()) {
+    # - Registration successful
+    echo $gateway->_getStatus(); # - "user successfully signed up."
+    # - User is automatically logged in
+} else {
+    # - Registration failed
+    echo $gateway->_getStatus(); # - "provided email is already used."
+}
+
+Write: "The RegisterAuthGateway:"
+Write: "- Checks if the email is already in use"
+Write: "- Hashes the password using Argon2ID"
+Write: "- Inserts the user into the database"
+Write: "- Automatically logs the user in, in a safe session environment"
+
+Write: "Make sure your database has a 'users' table with columns:"
+Write: "- uid (primary key)"
+Write: "- username"
+Write: "- email"
+Write: "- password_hash (or password)"
+Write: "- perms (JSON array of permissions)"
+
+6.2 User Login
+Write: "To log in a user:"
+
+Include code example:
+use Aether\Auth\Gateway\LoginAuthGateway;
+
+$gateway = new LoginAuthGateway($email, $password);
+
+if ($gateway->_tryAuth()) {
+    # - Login successful
+    echo $gateway->_getStatus(); # - "user successfully logged in."
+} else {
+    # - Login failed
+    echo $gateway->_getStatus(); # - "user login failed."
+}
+
+Write: "The LoginAuthGateway:"
+Write: "- Checks if the email exists"
+Write: "- Verifies the password hash"
+Write: "- Creates a UserInstance and safely stores it in the session environment"
+
+6.3 Checking Authentication Status
+Write: "Check if a user is logged in:"
+
+Include code example:
+use Aether\Auth\User\UserFactory;
+
+if (UserFactory::_isLoggedIn()) {
+    # - User is logged in
+} else {
+    # - User is not logged in
+}
+
+Write: "Or use the ServiceManager: (much appreciated)"
+
+Include code example:
+if (Aether()->_session()->_auth()->_isLoggedIn()) {
+    # - User is logged in
+}
+
+6.4 Getting Current User
+Write: "Retrieve the current logged-in user:"
+
+Include code example:
+use Aether\Auth\User\UserFactory;
+
+$user = UserFactory::_fromSession();
+
+if ($user) {
+    echo $user->_getUid();
+    echo $user->_getUsername();
+    echo $user->_getEmail();
+}
+
+Write: "Or use the ServiceManager: (much appreciated)"
+
+Include code example:
+$user = Aether()->_session()->_auth()->_getUser();
+
+if ($user) {
+    echo $user->_getUid();
+    echo $user->_getUsername();
+    echo $user->_getEmail();
+}
+
+6.5 User Permissions
+Write: "Check user permissions:"
+
+Include code example:
+if ($user->_hasPerm('PERM.ADMIN')) {
+    # - User has admin permission, same as $user->_isAdmin()
+}
+
+Write: "Add a permission:"
+
+Include code example:
+$user->_addPerm('PERM.ADMIN');
+$user->_update(); # - Save to database and session
+
+Write: "Remove a permission:"
+
+Include code example:
+$user->_removePerm('PERM.ADMIN');
+$user->_update();
+
+Write: "Check if user is admin:"
+
+Include code example:
+if ($user->_isAdmin()) {
+    # - User is admin
+}
+
+Write: "Get all permissions:"
+
+Include code example:
+$permissions = $user->_getPerms(); # - Returns array
+
+6.6 User Logout
+Write: "To log out a user:"
+
+Include code example:
+use Aether\Auth\Gateway\LogoutAuthGateway;
+
+$gateway = new LogoutAuthGateway();
+
+if ($gateway->_tryAuth()) {
+    # - Logout successful
+    echo $gateway->_getStatus();
+}
+
+Write: "This removes the user from the session."
+
+================================================================================
+SECTION 7: SESSIONS
+================================================================================
+
+7.1 Session Basics
+Write: "Aether-PHP provides secure session management. Sessions are
+automatically started when the framework initializes."
+
+Write: "Store values in session:"
+
+Include code example:
+Aether()->_session()->_get()->_setValue('key', 'value');
+
+Write: "Retrieve values:"
+
+Include code example:
+$value = Aether()->_session()->_get()->_getValue('key');
+
+Write: "Check if a key exists:"
+
+Include code example:
+if (Aether()->_session()->_get()->_valueExist('key')) {
+    # - Key exists
+}
+
+Write: "Remove a value:"
+
+Include code example:
+Aether()->_session()->_get()->_removeValue('key');
+
+7.2 Session Security
+Write: "Aether-PHP automatically:"
+Write: "- Signs session data with HMAC"
+Write: "- Encodes data in base64"
+Write: "- Validates data integrity on retrieval"
+
+Write: "Get session ID:"
+
+Include code example:
+$sessionId = Aether()->_session()->_get()->_getSessId();
+
+Write: "Regenerate session ID (useful after login):"
+
+Include code example:
+Aether()->_session()->_get()->_regenerateId();
+
+Tip: Regenerate session ID after authentication to prevent session fixation attacks.
+
+================================================================================
+SECTION 8: HANDLING HTTP REQUESTS
+================================================================================
+
+8.1 Reading POST/PUT Data
+Write: "To read data from POST or PUT requests:"
+
+Include code example:
+use Aether\Http\HttpParameterUnpacker;
+
+$params = new HttpParameterUnpacker();
+
+$email = $params->_getAttribute('email');
+$password = $params->_getAttribute('password');
+
+Write: "The HttpParameterUnpacker automatically handles:"
+Write: "- JSON request bodies"
+Write: "- Form-data"
+Write: "- URL-encoded data"
+
+Write: "Check if attribute exists:"
+
+Include code example:
+$email = $params->_getAttribute('email');
+if ($email === false) {
+    # - Attribute doesn't exist
+}
+
+8.2 Making HTTP Requests
+Write: "Make outgoing HTTP requests:"
+
+Include code example:
+use Aether\Http\RequestFactory;
+use Aether\Http\Methods\HttpMethodEnum;
+
+$request = RequestFactory::_create();
+$request->_setDestination('https:# -api.example.com/users');
+$request->_setMethod(HttpMethodEnum::GET);
+$response = $request->_send();
+
+Write: "Supported methods: GET, POST, PUT, DELETE"
+
+Tip: This is useful for calling external APIs or webhooks.
+
+================================================================================
+SECTION 9: MIDDLEWARE
+================================================================================
+
+9.1 Understanding Middleware
+Write: "Middleware runs before your controller methods. Aether-PHP includes
+several built-in middlewares:"
+Write: "- RatelimitMiddleware: Limits requests per IP (100 requests per 60 seconds)"
+Write: "- CsrfMiddleware: Protects against CSRF attacks"
+Write: "- SecurityHeadersMiddleware: Adds security headers to responses"
+
+Write: "Middlewares are registered in app/App/App.php:"
+
+Include code example:
+private static $_middlewares = [
+    RatelimitMiddleware::class,
+    CsrfMiddleware::class,
+    SecurityHeadersMiddleware::class
+];
+
+Write: "The order matters - middlewares execute in the order they're listed."
+
+9.2 CSRF Protection
+Write: "CSRF protection is automatic. For GET/HEAD/OPTIONS requests, the CSRF
+token is exposed in the X-CSRF-Token header."
+
+Write: "In your frontend, include the token in POST/PUT/DELETE requests:"
+
+Include code example (JavaScript):
+# - Get token from header (set automatically on GET requests)
+const token = response.headers.get('X-CSRF-Token');
+
+# - Include in POST request
+fetch('/api/users', {
+    method: 'POST',
+    headers: {
+        'X-CSRF-Token': token,
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: 'John' })
+});
+
+Write: "Or include in form data:"
+
+Include code example (HTML):
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+    <!-- form fields -->
+</form>
+
+Write: "The middleware automatically verifies the token and returns 403 if invalid."
+
+9.3 Creating Custom Middleware
+Write: "Create your own middleware by implementing MiddlewareInterface:"
+
+Include code example:
+use Aether\Middleware\MiddlewareInterface;
+
+class LoggingMiddleware implements MiddlewareInterface {
+
+    public function _handle(callable $_next) {
+        # - Code before controller execution
+        error_log('Request: ' . $_SERVER['REQUEST_URI']);
+        
+        $_next(); # - Call next middleware or controller
+        
+        # - Code after controller execution
+        error_log('Response sent');
+    }
+}
+
+Write: "Register it in app/App/App.php:"
+
+Include code example:
+private static $_middlewares = [
+    LoggingMiddleware::class,
+    RatelimitMiddleware::class,
+    # - ... other middlewares
+];
+
+Tip: Use middleware for cross-cutting concerns like logging, authentication
+checks, or data transformation.
+
+================================================================================
+SECTION 10: CACHING
+================================================================================
+
+10.1 Using APCU Cache
+Write: "Aether-PHP supports APCU caching. Access the cache:"
+
+Include code example:
+$cache = Aether()->_cache()->_apcu();
+
+Write: "Store a value:"
+
+Include code example:
+$cache->_set('key', 'value', 3600); # - TTL in seconds (1 hour)
+
+Write: "Retrieve a value:"
+
+Include code example:
+$value = $cache->_get('key', 'default'); # - Returns 'default' if key doesn't exist
+
+Write: "Check if key exists:"
+
+Include code example:
+if ($cache->_has('key')) {
+    # - Key exists
+}
+
+Write: "Delete a key:"
+
+Include code example:
+$cache->_delete('key');
+
+Write: "Clear all cache:"
+
+Include code example:
+$cache->_clear();
+
+10.2 Cache Patterns
+Write: "Common cache pattern - cache-aside:"
+
+Include code example:
+$cache = Aether()->_cache()->_apcu();
+$key = 'users_list';
+
+# - Try to get from cache
+$users = $cache->_get($key);
+
+if ($users === null) {
+    # - Not in cache, fetch from database
+    $users = $db->_table('users')->_select('*')->_send();
+    
+    # - Store in cache for 5 minutes
+    $cache->_set($key, $users, 300);
+}
+
+# - Use $users
+
+Tip: Cache expensive operations like database queries or API calls.
+
+================================================================================
+SECTION 11: FILE OPERATIONS
+================================================================================
+
+11.1 Reading and Writing Files
+Write: "Aether-PHP provides file operations through the IO service:"
+
+Include code example:
+# - Read a JSON file
+$file = Aether()->_io()->_file('data.json', IOTypeEnum::JSON);
+$data = $file->_readDecoded(); # - Returns decoded JSON as array
+
+# - Write a JSON file
+$file->_write(['key' => 'value']); # - Automatically encodes to JSON
+
+Write: "Supported file types:"
+Write: "- JSON: Automatically encodes/decodes JSON"
+Write: "- ENV: Parses .env format"
+Write: "- TEXT: Plain text files"
+Write: "- PHP: PHP files"
+
+11.2 Working with Folders
+Write: "Create and manipulate folders:"
+
+Include code example:
+$folder = Aether()->_io()->_folder('path/to/folder');
+
+# - Check if exists
+if (!$folder->_exist()) {
+    $folder->_create();
+}
+
+# - List files
+$files = $folder->_listFiles('*.php');
+
+# - Create a file in folder
+$newFile = $folder->_createFile('newfile.php');
+
+Write: "Set folder permissions:"
+
+Include code example:
+$folder->_setPerm(0755); # - Read, write, execute for owner; read, execute for others
+
+11.3 Stream Operations
+Write: "For large files, use streams:"
+
+Include code example:
+$stream = Aether()->_io()->_stream('largefile.txt', IOTypeEnum::TEXT);
+
+# - Read line by line with callback
+$stream->_readEachLine(function($line) {
+    echo $line . PHP_EOL;
+});
+
+Write: "Streams use file locking to prevent concurrent access issues."
+
+================================================================================
+SECTION 12: INTERNATIONALIZATION (I18N)
+================================================================================
+
+12.1 Setting Up Translations
+Write: "Aether-PHP includes an I18n module. Create translation files in
+lang/{code}/{code}_{UPPERCASE}.json:"
+
+Include code example (lang/en/en_EN.json):
+{
+    "welcome": "Welcome",
+    "hello": "Hello, {name}!",
+    "admin": {
+        "users": "Users",
+        "settings": "Settings"
+    }
+}
+
+Include code example (lang/fr/fr_FR.json):
+{
+    "welcome": "Bienvenue",
+    "hello": "Bonjour, {name}!",
+    "admin": {
+        "users": "Utilisateurs",
+        "settings": "Paramètres"
+    }
+}
+
+12.2 Using Translations
+Write: "Use the global __() function to translate:"
+
+Include code example:
+echo __('welcome'); # - "Welcome" or "Bienvenue" depending on language
+
+Write: "With parameters:"
+
+Include code example:
+echo __('hello', ['name' => 'John']); # - "Hello, John!" or "Bonjour, John!"
+
+Write: "Nested keys:"
+
+Include code example:
+echo __('admin.users'); # - "Users" or "Utilisateurs"
+
+Write: "Force a specific language:"
+
+Include code example:
+echo __('welcome', [], 'fr'); # - Always returns French translation
+
+Write: "The framework automatically detects language from Accept-Language
+header, or falls back to the default language."
+
+Tip: The I18n module must be registered in app/App/App.php for translations to work.
+
+================================================================================
+SECTION 13: CLI COMMANDS
+================================================================================
+
+13.1 Available Commands
+Write: "Aether-PHP includes a CLI tool. Run commands using:"
+
+Include code example:
+php bin/aether [command]
+
+Write: "Available commands:"
+Write: "- make:controller Name - Creates a new controller"
+Write: "- make:file path/to/file.php - Creates a new file"
+Write: "- make:folder path/to/folder - Creates a new folder"
+Write: "- setup - Runs setup commands from Aetherfile"
+Write: "- setup:dev - Runs setup commands from Aetherfile.dev"
+Write: "- setup:prod - Runs setup commands from Aetherfile.prod"
+Write: "- source:script path/to/script.php - Runs a custom script"
+
+13.2 Creating Controllers via CLI
+Write: "Generate a controller quickly:"
+
+Include code example:
+php bin/aether make:controller UserController
+
+Write: "This creates app/App/Controller/UserController.php with basic structure."
+
+13.3 Setup Files
+Write: "Create an Aetherfile in your project root with commands to run:"
+
+Include code example (Aetherfile):
+echo "Setting up project..."
+# Database migrations
+php scripts/migrate.php
+# Seed data
+php scripts/seed.php
+echo "Setup complete!"
+
+Write: "Run it with: php bin/aether setup"
+
+Write: "Create environment-specific files:"
+Write: "- Aetherfile.dev for development"
+Write: "- Aetherfile.prod for production"
+
+13.4 Custom Scripts
+Write: "Create custom CLI scripts by extending BaseScript:"
+
+Include code example:
+use Aether\Modules\AetherCLI\Script\BaseScript;
+
+class MyScript extends BaseScript {
+    public function _onLoad() {
+        $this->_logger->_echo("Running custom script...");
+    }
+    
+    public function _onRun() {
+        # - Your script logic here
+        $this->_logger->_echo("Script completed!");
+    }
+}
+
+Write: "Run it with: php bin/aether source:script path/to/MyScript.php"
+
+================================================================================
+SECTION 14: ADVANCED ROUTING
+================================================================================
+
+14.1 Route Organization
+Write: "Organize routes by feature or domain:"
+
+Include code example:
+# - app/App/Controller/UserController.php
+/**
+ * [@base] => /users
+ */
+class UserController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function index() { /* List users */ }
+    
+    /**
+     * [@method] => GET
+     * [@route] => /{id}
+     */
+    public function show($id) { /* Show user */ }
+}
+
+Write: "This creates routes:"
+Write: "- GET /users"
+Write: "- GET /users/{id}"
+
+14.2 RESTful API Structure
+Write: "Follow RESTful conventions:"
+
+Include code example:
+/**
+ * [@base] => /api/v1/users
+ */
+class UserApiController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function index() { /* GET /api/v1/users */ }
+    
+    /**
+     * [@method] => GET
+     * [@route] => /{id}
+     */
+    public function show($id) { /* GET /api/v1/users/{id} */ }
+    
+    /**
+     * [@method] => POST
+     * [@route] => /
+     */
+    public function store() { /* POST /api/v1/users */ }
+    
+    /**
+     * [@method] => PUT
+     * [@route] => /{id}
+     */
+    public function update($id) { /* PUT /api/v1/users/{id} */ }
+    
+    /**
+     * [@method] => DELETE
+     * [@route] => /{id}
+     */
+    public function destroy($id) { /* DELETE /api/v1/users/{id} */ }
+}
+
+================================================================================
+SECTION 15: ADVANCED DATABASE
+================================================================================
+
+15.1 Complex Queries
+Write: "Build complex queries by chaining methods:"
+
+Include code example:
+$results = $db->_table('users')
+    ->_select('users.name', 'users.email', 'posts.title')
+    ->_join('posts', 'users.id = posts.user_id')
+    ->_where('users.status', 'active')
+    ->_where('posts.published', true)
+    ->_send();
+
+Write: "For queries the QueryBuilder can't handle, use _raw() with caution:"
+
+Include code example:
+$results = $db->_raw('
+    SELECT u.name, COUNT(p.id) as post_count
+    FROM users u
+    LEFT JOIN posts p ON u.id = p.user_id
+    WHERE u.created_at > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+    GROUP BY u.id
+    HAVING post_count > 5
+    ORDER BY post_count DESC
+    LIMIT 10
+');
+
+15.2 Database Transactions
+Write: "Use raw SQL for transactions:"
+
+Include code example:
+try {
+    $db->_raw('START TRANSACTION');
+    
+    $db->_table('users')->_insert('name', 'John')->_send();
+    $db->_table('posts')->_insert('title', 'Post')->_send();
+    
+    $db->_raw('COMMIT');
+} catch (Exception $e) {
+    $db->_raw('ROLLBACK');
+    throw $e;
+}
+
+Tip: Consider wrapping transaction logic in a service class for reusability.
+
+15.3 Multiple Databases
+Write: "Work with multiple databases:"
+
+Include code example:
+$mainDb = Aether()->_db()->_mysql('main_database');
+$analyticsDb = Aether()->_db()->_mysql('analytics_database');
+
+$users = $mainDb->_table('users')->_select('*')->_send();
+$stats = $analyticsDb->_table('stats')->_select('*')->_send();
+
+================================================================================
+SECTION 16: ADVANCED AUTHENTICATION
+================================================================================
+
+16.1 Custom Authentication Gateway
+Write: "Create custom authentication methods by extending AuthInstance:"
+
+Include code example:
+use Aether\Auth\AuthInstance;
+use Aether\Auth\Gateway\AuthGatewayEventInterface;
+
+class OAuthGateway extends AuthInstance implements AuthGatewayEventInterface {
+    public function _tryAuth(): bool {
+        # - Your authentication logic
+        # - Return true on success, false on failure
+    }
+    
+    public function _onSuccess(array $_data): string {
+        # - Handle successful authentication
+        # - Create UserInstance and store in session
+        return "Authentication successful";
+    }
+    
+    public function _onFailure(): string {
+        return "Authentication failed";
+    }
+}
+
+16.2 Permission Management
+Write: "Create a permission enum for type safety:"
+
+Include code example:
+enum PermissionEnum: string {
+    case ADMIN = 'PERM.ADMIN';
+    case MODERATOR = 'PERM.MODERATOR';
+    case USER = 'PERM.USER';
+}
+
+Write: "Use it in your code:"
+
+Include code example:
+if ($user->_hasPerm(PermissionEnum::ADMIN->value)) {
+    # - Admin only code
+}
+
+16.3 Protecting Routes
+Write: "Create middleware to protect routes:"
+
+Include code example:
+class AuthMiddleware implements MiddlewareInterface {
+    public function _handle(callable $_next) {
+        if (!Aether()->_session()->_auth()->_isLoggedIn()) {
+            http_response_code(401);
+            Aether()->_http()->_response()->_json([
+                'error' => 'Unauthorized'
+            ], 401)->_send();
+            return;
+        }
+        
+        $_next();
+    }
+}
+
+Write: "Register it in app/App/App.php before other middlewares:"
+
+Include code example:
+private static $_middlewares = [
+    AuthMiddleware::class, # - Check auth first
+    RatelimitMiddleware::class,
+    # - ... other middlewares
+];
+
+================================================================================
+SECTION 17: ERROR HANDLING AND DEBUGGING
+================================================================================
+
+17.1 Debug Helper
+Write: "Use the _debug() helper function to inspect variables:"
+
+Include code example:
+_debug($variable);
+_debug(['key' => 'value']);
+_debug($user);
+
+Write: "This outputs formatted variable information useful for debugging."
+
+17.2 Error Handling
+Write: "In development mode (APP_ENV=dev), errors are displayed."
+Write: "In production mode (APP_ENV=prod), errors are hidden."
+
+Write: "Handle errors in your controllers:"
+
+Include code example:
+try {
+    $result = $db->_table('users')->_select('*')->_send();
+} catch (Exception $e) {
+    return Aether()->_http()->_response()->_json([
+        'error' => 'Database error',
+        'message' => $e->getMessage()
+    ], 500)->_send();
+}
+
+17.3 Logging
+Write: "Use PHP's error_log() for logging:"
+
+Include code example:
+error_log('User action: ' . $action);
+error_log('Error: ' . $e->getMessage());
+
+Tip: Consider creating a LoggingMiddleware for centralized logging.
+
+================================================================================
+SECTION 18: BEST PRACTICES
+================================================================================
+
+18.1 Code Organization
+Write: "Organize your code following these principles:"
+Write: "- Keep controllers thin - move business logic to service classes"
+Write: "- Use repositories for database access patterns"
+Write: "- Separate API controllers from web controllers"
+Write: "- Group related routes in the same controller"
+
+18.2 Security
+Write: "Security best practices:"
+Write: "- Always validate and sanitize user input"
+Write: "- Use parameterized queries (QueryBuilder does this automatically)"
+Write: "- Regenerate session ID after login"
+Write: "- Use strong SESSION_HMAC key"
+Write: "- Keep APP_ENV=prod in production"
+Write: "- Never expose sensitive data in error messages"
+
+18.3 Performance
+Write: "Performance tips:"
+Write: "- Use caching for expensive operations"
+Write: "- Optimize database queries (avoid N+1 problems)"
+Write: "- Use indexes on frequently queried columns"
+Write: "- Cache database connections (already done automatically)"
+Write: "- Minimize middleware overhead"
+
+18.4 Testing
+Write: "Testing recommendations:"
+Write: "- Test controllers with different HTTP methods"
+Write: "- Test authentication flows"
+Write: "- Test database operations"
+Write: "- Test error handling"
+Write: "- Use a test database for integration tests"
+
+================================================================================
+SECTION 19: COMPLETE EXAMPLES
+================================================================================
+
+19.1 Simple Blog API
+Write: "Complete example - Blog API with authentication:"
+
+Include code example:
+# - app/App/Controller/Api/PostApiController.php
+/**
+ * [@base] => /api/v1/posts
+ */
+class PostApiController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function index() {
+        $db = Aether()->_db()->_mysql('blog');
+        $posts = $db->_table('posts')
+            ->_select('*')
+            ->_where('published', true)
+            ->_send();
+        
+        return Aether()->_http()->_response()->_json($posts, 200)->_send();
+    }
+    
+    /**
+     * [@method] => POST
+     * [@route] => /
+     */
+    public function store() {
+        # - Check authentication
+        if (!Aether()->_session()->_auth()->_isLoggedIn()) {
+            return Aether()->_http()->_response()->_json([
+                'error' => 'Unauthorized'
+            ], 401)->_send();
+        }
+        
+        # - Get request data
+        $params = new HttpParameterUnpacker();
+        $title = $params->_getAttribute('title');
+        $content = $params->_getAttribute('content');
+        
+        # - Validate
+        if (!$title || !$content) {
+            return Aether()->_http()->_response()->_json([
+                'error' => 'Title and content required'
+            ], 400)->_send();
+        }
+        
+        # - Insert
+        $db = Aether()->_db()->_mysql('blog');
+        $db->_table('posts')
+            ->_insert('title', $title)
+            ->_insert('content', $content)
+            ->_insert('user_id', Aether()->_session()->_auth()->_getUser()->_getUid())
+            ->_insert('published', false)
+            ->_send();
+        
+        return Aether()->_http()->_response()->_json([
+            'message' => 'Post created'
+        ], 201)->_send();
+    }
+}
+
+19.2 User Dashboard
+Write: "Complete example - User dashboard with views:"
+
+Include code example:
+# - app/App/Controller/DashboardController.php
+class DashboardController extends Controller {
+    /**
+     * [@method] => GET
+     * [@route] => /dashboard
+     */
+    public function index() {
+        # - Check authentication
+        if (!Aether()->_session()->_auth()->_isLoggedIn()) {
+            header('Location: /login');
+            exit;
+        }
+        
+        $user = Aether()->_session()->_auth()->_getUser();
+        $db = Aether()->_db()->_mysql('app');
+        
+        # - Get user's posts
+        $posts = $db->_table('posts')
+            ->_select('*')
+            ->_where('user_id', $user->_getUid())
+            ->_send();
+        
+        # - Render view
+        $this->_render('dashboard', [
+            'user' => $user,
+            'posts' => $posts
+        ]);
+    }
+}
+
+Write: "View file (public/views/dashboard.php):"
+
+Include code example:
+<h1>Welcome, <?php echo $user->_getUsername(); ?>!</h1>
+
+<h2>Your Posts</h2>
+<?php foreach ($posts as $post): ?>
+    <div class="post">
+        <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+        <p><?php echo htmlspecialchars($post['content']); ?></p>
+    </div>
+<?php endforeach; ?>
+
+================================================================================
+SECTION 20: TROUBLESHOOTING
+================================================================================
+
+20.1 Common Issues
+Write: "Common issues and solutions:"
+
+Write: "Issue: Routes not working"
+Write: "Solution:"
+Write: "- Check that controller is in app/App/Controller/ or app/App/Controller/Api/"
+Write: "- Verify annotations are correct: [@method] and [@route]"
+Write: "- Check web server is pointing to /index.php directory"
+Write: "- Ensure autoload.php is loading correctly"
+
+Write: "Issue: Database connection fails"
+Write: "Solution:"
+Write: "- Verify .env file has correct database credentials"
+Write: "- Check database server is running"
+Write: "- Ensure database exists"
+Write: "- Check PHP PDO extension is installed"
+
+Write: "Issue: CSRF token errors"
+Write: "Solution:"
+Write: "- Include CSRF token in POST/PUT/DELETE requests"
+Write: "- Get token from X-CSRF-Token header on GET requests"
+Write: "- Ensure session is working correctly"
+
+Write: "Issue: Views not rendering"
+Write: "Solution:"
+Write: "- Check view file exists in public/views/"
+Write: "- Verify file has .php extension"
+Write: "- Check variables are passed correctly to _render()"
+
+20.2 Getting Help
+Write: "If you encounter issues:"
+Write: "- Check the error messages (in dev mode)"
+Write: "- Review the framework source code"
+Write: "- Check PHP error logs"
+Write: "- Verify all requirements are met"
+
+================================================================================
+END OF DOCUMENTATION PLAN
+================================================================================
+
+This plan covers all aspects of using Aether-PHP framework from basic to
+advanced levels. Each section includes practical examples, code snippets,
+tips, and warnings where appropriate. The documentation should be written
+in a clear, progressive manner, building from simple concepts to complex
+implementations.
