@@ -60,7 +60,8 @@
       "card_3_text": "Limitation de débit, en-têtes CSP, paramètres PHP.ini sécurisés, et vérification de jetons CSRF. Tout est opt-in, tout est composable, tout est prêt pour la production dès le premier jour.",
       "card_4_title": "Couche de permissions",
       "card_4_text": "Système de rôles intégré avec permissions utilisateur et admin par défaut. Étends-le selon tes besoins ou utilise-le tel quel - l'autorisation est explicite, typée et auditable.",
-      "code_title": "Vérification d'authentification - sécurisé par défaut"
+      "code_title": "Vérification d'authentification - sécurisé par défaut",
+      "code_title_2": "Session - signée HMAC par défaut"
     },
 
     "features": {

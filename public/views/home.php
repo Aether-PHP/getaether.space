@@ -175,15 +175,15 @@
      * [@route]  => /api/users
      */</span>
     <span class="kw">public function</span> <span class="fn">fetchUsers</span>(){
-        <span class="kw">if</span> (!<span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_isLoggedIn</span>())
-            <span class="kw">return</span> <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_response</span>()-><span class="fn">_json</span>([<span class="str">"You need to be logged in."</span>, <span class="num">401</span>])-><span class="fn">_send</span>();
+        <span class="kw">if</span> (!<span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_auth</span>()-><span class="fn">_isLoggedIn</span>())
+            <span class="kw">return</span> <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_response</span>()-><span class="fn">_json</span>([<span class="str">"You need to be logged in."</span>], <span class="num">401</span>)-><span class="fn">_send</span>();
 
-        <span class="kw">$usersList</span> = <span class="fn">Aether</span>()-><span class="fn">_db</span>()-><span class="fn">_mysql</span>(<span class="str">"mydatabase"</span>)
+        <span class="kw">$usersListArr</span> = <span class="fn">Aether</span>()-><span class="fn">_db</span>()-><span class="fn">_mysql</span>(<span class="str">"mydatabase"</span>)
             -><span class="fn">_table</span>(<span class="str">"users"</span>)
             -><span class="fn">_select</span>(<span class="str">'*'</span>)
             -><span class="fn">_send</span>();
 
-        <span class="kw">return</span> <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_response</span>()-><span class="fn">_json</span>([<span class="kw">$usersList</span>, <span class="num">200</span>])-><span class="fn">_send</span>();
+        <span class="kw">return</span> <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_response</span>()-><span class="fn">_json</span>(<span class="kw">$usersListArr</span>, <span class="num">200</span>)-><span class="fn">_send</span>();
     }
 }</code></pre>
                 </div>
@@ -236,14 +236,33 @@
                         <span class="code-card__title"><?= __("home.security.code_title"); ?></span>
                         <div class="code-card__dots" aria-hidden="true"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="kw">if</span> (<span class="fn">UserInstance</span>::<span class="fn">_isLoggedIn</span>()
-            && <span class="fn">SessionInstance</span>::<span class="fn">_getUser</span>()-><span class="fn">_isAdmin</span>()) {
+                    <pre class="code-block"><code><span class="kw">$isLoggedin</span> = <span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_auth</span>()-><span class="fn">_isLoggedIn</span>();
+<span class="kw">$admin</span> = <span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_auth</span>()-><span class="fn">_getUser</span>()?-><span class="fn">_isAdmin</span>();
 
-            <span class="cmt">// Access granted — no guessing, no magic</span>
-            <span class="kw">echo</span> <span class="str">"Admin access granted."</span>;
-        }</code></pre>
+<span class="kw">if</span> (<span class="kw">$isLoggedin</span> && <span class="kw">$admin</span>){
+    <span class="cmt"># - Access granted : no guessing, no magic</span>
+    <span class="kw">echo</span> <span class="str">"Admin access granted."</span>;
+}
+
+</code></pre>
+                </div>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title"><?= __("home.security.code_title_2"); ?></span>
+                        <div class="code-card__dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="cmt"># - Store values : HMAC-signed, base64-encoded</span>
+<span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_get</span>()-><span class="fn">_setValue</span>(<span class="str">"cart_id"</span>, <span class="num">5693</span>);
+
+<span class="kw">if</span> (!<span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_get</span>()-><span class="fn">_valueExist</span>(<span class="str">"cart_id"</span>)){
+    <span class="cmt"># - Tampered or missing : rejected automatically</span>
+}
+
+<span class="kw">$cartId</span> = <span class="fn">Aether</span>()-><span class="fn">_session</span>()-><span class="fn">_get</span>()-><span class="fn">_getValue</span>(<span class="str">"cart_id"</span>);</code></pre>
                 </div>
             </div>
+
         </div>
     </section>
 

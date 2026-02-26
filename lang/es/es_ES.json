@@ -60,7 +60,8 @@
       "card_3_text": "Limitación de tasa, cabeceras CSP, parámetros PHP.ini seguros, y verificación de tokens CSRF. Todo es opt-in, todo es componible, todo está listo para producción desde el día uno.",
       "card_4_title": "Capa de permisos",
       "card_4_text": "Sistema de roles integrado con permisos de usuario y admin por defecto. Extiéndelo según tus necesidades o úsalo tal cual - la autorización es explícita, tipada y auditable.",
-      "code_title": "Verificación de autenticación - seguro por defecto"
+      "code_title": "Verificación de autenticación - seguro por defecto",
+      "code_title_2": "Sesión - firmada con HMAC por defecto"
     },
 
     "features": {

@@ -98,7 +98,6 @@ class Aether {
 
         # - Middlewares
         Pipeline::_run([
-            RatelimitMiddleware::class,
             CsrfMiddleware::class
         ], function (){
             # - Router Gateway : deliver correct controller for each route

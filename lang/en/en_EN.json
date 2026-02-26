@@ -60,7 +60,8 @@
       "card_3_text": "Rate limiting, CSP headers, secure PHP.ini parameters, and CSRF token checking. All opt-in, all composable, all production-ready from day one.",
       "card_4_title": "Permission Layer",
       "card_4_text": "Built-in role system with default user and admin permissions. Extend it for your needs or use it as-is - authorization is explicit, typed, and auditable.",
-      "code_title": "Auth check - secure by default"
+      "code_title": "Auth check - secure by default",
+      "code_title_2": "Session storage - HMAC-signed by default"
     },
 
     "features": {
