@@ -6,9 +6,9 @@
     <title>Aether PHP :: Documentation</title>
     <meta name="description" content="Full documentation for the Aether PHP framework. Routing, Auth, Middleware, Sessions, Database, CLI and more.">
     <link rel="stylesheet" href="/public/css/docs.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https:# - fonts.googleapis.com">
+    <link rel="preconnect" href="https:# - fonts.gstatic.com" crossorigin>
+    <link href="https:# - fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
         </div>
         <div class="topnav__right">
             <a href="/" class="topnav__link">Home</a>
-            <a href="https://github.com/Aether-PHP/Aether-PHP" class="topnav__link" target="_blank" rel="noopener">GitHub ↗</a>
+            <a href="https:# - github.com/Aether-PHP/Aether-PHP" class="topnav__link" target="_blank" rel="noopener">GitHub ↗</a>
             <a class="topnav__version">v1.x</a>
         </div>
         <button class="topnav__burger" id="topnav-burger" aria-label="Toggle sidebar">
@@ -129,12 +129,18 @@
                     <a href="#middleware-understanding" class="sidenav__link" data-section="middleware-understanding">Understanding Middleware</a>
                     <a href="#middleware-csrf" class="sidenav__link" data-section="middleware-csrf">CSRF Protection</a>
                     <a href="#middleware-custom" class="sidenav__link" data-section="middleware-custom">Creating Custom Middleware</a>
+                    <a href="#middleware-route" class="sidenav__link" data-section="middleware-route">Route Middlewares</a>
                 </div>
 
                 <div class="sidenav__group">
                     <div class="sidenav__group-label">Caching</div>
                     <a href="#cache-apcu" class="sidenav__link" data-section="cache-apcu">Using APCU Cache</a>
                     <a href="#cache-patterns" class="sidenav__link" data-section="cache-patterns">Cache Patterns</a>
+                </div>
+
+                <div class="sidenav__group">
+                    <div class="sidenav__group-label">Modules</div>
+                    <a href="#modules-analytics" class="sidenav__link" data-section="modules-analytics">HTTP Analytics Module</a>
                 </div>
 
                 <div class="sidenav__group">
@@ -249,7 +255,7 @@
                                     <span class="code-card__title">Terminal</span>
                                     <div class="code-card__dots"><span></span><span></span><span></span></div>
                                 </div>
-                                <pre class="code-block"><code>git clone https://github.com/Aether-PHP/Aether-PHP
+                                <pre class="code-block"><code>git clone https:# - github.com/Aether-PHP/Aether-PHP
 cd Aether-PHP</code></pre>
                             </div>
                         </div>
@@ -301,31 +307,39 @@ cd Aether-PHP</code></pre>
             <section class="doc-section" id="environment">
                 <div class="doc-section__label">Configuration</div>
                 <h1 class="doc-section__h1">Environment Variables</h1>
-                <p class="doc-section__lead">Aether-PHP uses a .env file for configuration. Create a .env file in the root directory with the following variables:</p>
+                <p class="doc-section__lead">Aether-PHP uses a <code>.env</code> file for configuration. Create it in the project root and use the following example as a base:</p>
 
                 <div class="code-card">
                     <div class="code-card__header">
                         <span class="code-card__title">.env</span>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="cmt"># Application</span>
-APP_ENV=dev
+                    <pre class="code-block"><code><span class="cmt"># Project</span>
 PROJECT_NAME=MyApp
 
-<span class="cmt"># Database</span>
-DATABASE_ADDRESS=localhost
+<span class="cmt"># Database (MySQL)</span>
+DATABASE_ADDRESS=127.0.0.1
 DATABASE_USERNAME=root
-DATABASE_PASSWORD=your_password
-AUTH_DATABASE_GATEWAY=my_database
+DATABASE_PASSWORD=root
+
+<span class="cmt"># Authentication</span>
+AUTH_DATABASE_GATEWAY=aetherphp
 AUTH_TABLE_GATEWAY=users
 
-<span class="cmt"># Session</span>
-SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
+<span class="cmt"># Sessions and cookies</span>
+COOKIE_SESSION_TTL=10
+SESSION_FOLDER_PATH=../storage/sessions
+SESSION_HMAC=your_secret_key_at_least_32_characters_long
+
+<span class="cmt"># Ratelimit (RatelimitMiddleware)</span>
+RATELIMIT_SECOND_INTERVAL=60
+RATELIMIT_MAX_LIMIT=100
+
+<span class="cmt"># Maintenance (MaintenanceMiddleware)</span>
+MAINTENANCE=false</code></pre>
                 </div>
 
-                <p><code>APP_ENV</code> can be 'dev' or 'prod'. In dev mode, errors are displayed. In prod mode, errors are hidden for security.</p>
-
-                <p><code>SESSION_HMAC</code> is used to sign session data. Use a long, random string for security. Generate one using:</p>
+                <p><code>SESSION_HMAC</code> is used to sign all session data (HMAC). Use a long, random string for security. You can generate one with:</p>
 
                 <div class="code-card">
                     <div class="code-card__header">
@@ -340,7 +354,7 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     </div>
                     <div class="callout__body">
-                        <code>SESSION_HMAC</code> should never be committed to version control.
+                        <code>SESSION_HMAC</code> and your <code>.env</code> file should never be committed in production.
                     </div>
                 </div>
             </section>
@@ -1217,15 +1231,16 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                         <span class="code-card__title">Reading request data</span>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">HttpParameterUnpacker</span>;
+                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">HttpParameterTypeEnum</span>;
 
-<span class="kw">$params</span> = <span class="kw">new</span> <span class="fn">HttpParameterUnpacker</span>();
+<span class="cmt"># JSON body (php:# - input)</span>
+<span class="kw">$params</span> = <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_parameters</span>(<span class="fn">HttpParameterTypeEnum</span>::PHP_INPUT);
 
 <span class="kw">$email</span> = <span class="kw">$params</span>-><span class="fn">_getAttribute</span>(<span class="str">'email'</span>);
 <span class="kw">$password</span> = <span class="kw">$params</span>-><span class="fn">_getAttribute</span>(<span class="str">'password'</span>);</code></pre>
                 </div>
 
-                <p>The HttpParameterUnpacker automatically handles:</p>
+                <p>The <code>HttpParameterUnpacker</code> (accessible through the HTTP service) automatically handles:</p>
                 <ul>
                     <li>JSON request bodies</li>
                     <li>Form-data</li>
@@ -1258,16 +1273,17 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                         <span class="code-card__title">Outbound HTTP request</span>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">RequestFactory</span>;
-<span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">Methods</span>\<span class="fn">HttpMethodEnum</span>;
+                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">Methods</span>\<span class="fn">HttpMethodEnum</span>;
 
-<span class="kw">$request</span> = <span class="fn">RequestFactory</span>::<span class="fn">_create</span>();
-<span class="kw">$request</span>-><span class="fn">_setDestination</span>(<span class="str">'https://api.example.com/users'</span>);
-<span class="kw">$request</span>-><span class="fn">_setMethod</span>(<span class="fn">HttpMethodEnum</span>::GET);
+<span class="kw">$request</span> = <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_request</span>(
+    <span class="fn">HttpMethodEnum</span>::GET,
+    <span class="str">'https:# - api.example.com/users'</span>
+);
+
 <span class="kw">$response</span> = <span class="kw">$request</span>-><span class="fn">_send</span>();</code></pre>
                 </div>
 
-                <p>Supported methods: GET, POST, PUT, DELETE</p>
+                <p>Supported methods: GET, POST, PUT, DELETE. <code>_send()</code> returns a <code>HttpResponse</code> instance that exposes the HTTP status code, headers and body.</p>
 
                 <div class="callout callout--info">
                     <div class="callout__icon" aria-hidden="true">
@@ -1287,7 +1303,8 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                 <p class="doc-section__lead">Middleware runs before your controller methods. Aether-PHP includes several built-in middlewares:</p>
 
                 <ul>
-                    <li><strong>RatelimitMiddleware:</strong> Limits requests per IP (100 requests per 60 seconds)</li>
+                    <li><strong>MaintenanceMiddleware:</strong> Enables global maintenance mode when <code>MAINTENANCE=true</code></li>
+                    <li><strong>RatelimitMiddleware:</strong> Limits requests per IP (by default 100 requests per 60 seconds, configurable in <code>.env</code>)</li>
                     <li><strong>CsrfMiddleware:</strong> Protects against CSRF attacks</li>
                     <li><strong>SecurityHeadersMiddleware:</strong> Adds security headers to responses</li>
                 </ul>
@@ -1300,6 +1317,7 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
                     <pre class="code-block"><code><span class="kw">private static</span> <span class="kw">$_middlewares</span> = [
+    <span class="fn">MaintenanceMiddleware</span>::<span class="kw">class</span>,
     <span class="fn">RatelimitMiddleware</span>::<span class="kw">class</span>,
     <span class="fn">CsrfMiddleware</span>::<span class="kw">class</span>,
     <span class="fn">SecurityHeadersMiddleware</span>::<span class="kw">class</span>
@@ -1323,10 +1341,10 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                         <span class="code-card__title">JavaScript example</span>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="cmt">// Get token from header (set automatically on GET requests)</span>
+                    <pre class="code-block"><code><span class="cmt"># -  Get token from header (set automatically on GET requests)</span>
 <span class="kw">const</span> token = response.headers.<span class="fn">get</span>(<span class="str">'X-CSRF-Token'</span>);
 
-<span class="cmt">// Include in POST request</span>
+<span class="cmt"># -  Include in POST request</span>
 <span class="fn">fetch</span>(<span class="str">'/api/users'</span>, {
     method: <span class="str">'POST'</span>,
     headers: {
@@ -1370,12 +1388,12 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
 <span class="kw">class</span> <span class="fn">LoggingMiddleware</span> <span class="kw">implements</span> <span class="fn">MiddlewareInterface</span> {
 
     <span class="kw">public function</span> <span class="fn">_handle</span>(<span class="kw">callable</span> <span class="kw">$_next</span>) {
-        <span class="cmt">// Code before controller execution</span>
+        <span class="cmt"># -  Code before controller execution</span>
         <span class="fn">error_log</span>(<span class="str">'Request: '</span> . <span class="kw">$_SERVER</span>[<span class="str">'REQUEST_URI'</span>]);
 
-        <span class="kw">$_next</span>(); <span class="cmt">// Call next middleware or controller</span>
+        <span class="kw">$_next</span>(); <span class="cmt"># -  Call next middleware or controller</span>
 
-        <span class="cmt">// Code after controller execution</span>
+        <span class="cmt"># -  Code after controller execution</span>
         <span class="fn">error_log</span>(<span class="str">'Response sent'</span>);
     }
 }</code></pre>
@@ -1391,7 +1409,7 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                     <pre class="code-block"><code><span class="kw">private static</span> <span class="kw">$_middlewares</span> = [
     <span class="fn">LoggingMiddleware</span>::<span class="kw">class</span>,
     <span class="fn">RatelimitMiddleware</span>::<span class="kw">class</span>,
-    <span class="cmt">// ... other middlewares</span>
+    <span class="cmt"># -  ... other middlewares</span>
 ];</code></pre>
                 </div>
 
@@ -1401,6 +1419,57 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                     </div>
                     <div class="callout__body">
                         Use middleware for cross-cutting concerns like logging, authentication checks, or data transformation.
+                    </div>
+                </div>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="middleware-route">
+                <div class="doc-section__label">Middleware</div>
+                <h1 class="doc-section__h1">Route Middlewares</h1>
+                <p class="doc-section__lead">In addition to global middlewares defined in <code>app/App/App.php</code>, you can attach middlewares to a specific route using annotations.</p>
+
+                <h2>Using the [@middlewares] annotation</h2>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">Per-route middlewares</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="cmt">/**
+ * [@method]      => GET
+ * [@route]       => /dashboard
+ * [@middlewares] => AuthMiddleware
+ */</span>
+<span class="kw">public function</span> <span class="fn">index</span>() {
+    <span class="cmt"># Only executed if AuthMiddleware::_handle() calls $_next()</span>
+}</code></pre>
+                </div>
+
+                <p>You can chain several middlewares by separating them with commas:</p>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">Multiple middlewares</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="cmt">/**
+ * [@method]      => POST
+ * [@route]       => /admin/users
+ * [@middlewares] => AuthMiddleware,AdminOnlyMiddleware
+ */</span>
+<span class="kw">public function</span> <span class="fn">storeUser</span>() {
+    <span class="cmt"># Executed only if both middlewares allow it to pass</span>
+}</code></pre>
+                </div>
+
+                <div class="callout callout--info">
+                    <div class="callout__icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="callout__body">
+                        Names in <code>[@middlewares]</code> are automatically resolved to <code>Aether\Middleware\Stack\YourMiddleware</code>. If the class does not exist, it is ignored.
                     </div>
                 </div>
             </section>
@@ -1473,6 +1542,78 @@ SESSION_HMAC=your_secret_key_at_least_32_characters_long</code></pre>
                     </div>
                     <div class="callout__body">
                         Cache expensive operations like database queries or API calls.
+                    </div>
+                </div>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="modules-analytics">
+                <div class="doc-section__label">Modules</div>
+                <h1 class="doc-section__h1">HTTP Analytics Module</h1>
+                <p class="doc-section__lead">The Analytics module automatically logs every HTTP request into a dedicated SQLite database, giving you usage statistics without any external dependency.</p>
+
+                <h2>Enabling the module</h2>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">app/App/App.php</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Modules</span>\<span class="fn">Analytics</span>\<span class="fn">Analytics</span>;
+
+<span class="kw">class</span> <span class="fn">App</span> {
+
+    <span class="cmt">/** @var array $_modules */</span>
+    <span class="kw">private static</span> <span class="kw">array</span> <span class="kw">$_modules</span> = [
+        <span class="fn">Analytics</span>::<span class="kw">class</span>,
+        <span class="cmt"># -  Add other modules here (I18n, CLI, etc.)</span>
+    ];
+
+    <span class="kw">public static function</span> <span class="fn">_init</span>() : <span class="kw">void</span> {
+        <span class="fn">ModuleFactory</span>::<span class="fn">_load</span>(<span class="kw">self</span>::<span class="kw">$_modules</span>);
+        <span class="cmt"># ...</span>
+    }
+}</code></pre>
+                </div>
+
+                <p>Once enabled, the module creates (if needed) a SQLite file at <code>ressources/db.sqlite</code> and inserts one row per request.</p>
+
+                <h2>Collected data</h2>
+
+                <ul>
+                    <li><code>ip_addr</code>: client IP address</li>
+                    <li><code>user_agent</code>: raw User-Agent string</li>
+                    <li><code>protocol</code>: <code>http</code> or <code>https</code></li>
+                    <li><code>domain</code>: domain name (<code>HTTP_HOST</code>)</li>
+                    <li><code>route</code>: request path (without query string)</li>
+                    <li><code>http_method</code>: HTTP method (GET, POST, …)</li>
+                    <li><code>http_data</code>: GET params as JSON or raw request body</li>
+                    <li><code>phptimestamp</code>: PHP timestamp (seconds)</li>
+                </ul>
+
+                <h2>Reading statistics</h2>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">Retrieve logs by IP</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Modules</span>\<span class="fn">Analytics</span>\<span class="fn">Provider</span>\<span class="fn">LogProvider</span>;
+
+<span class="kw">$provider</span> = <span class="kw">new</span> <span class="fn">LogProvider</span>(<span class="str">'path/to/ressources/db.sqlite'</span>);
+
+<span class="kw">$entries</span> = <span class="kw">$provider</span>-><span class="fn">_retrieve</span>(<span class="str">'127.0.0.1'</span>);
+
+<span class="cmt"># $entries contains an array of rows from the analytics table</span></code></pre>
+                </div>
+
+                <div class="callout callout--info">
+                    <div class="callout__icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="callout__body">
+                        The Analytics module relies on the internal QueryBuilder and can live alongside your own SQLite or MySQL connections without extra configuration.
                     </div>
                 </div>
             </section>
@@ -1758,7 +1899,7 @@ echo "Setup complete!"</code></pre>
     }
 
     <span class="kw">public function</span> <span class="fn">_onRun</span>() {
-        <span class="cmt">// Your script logic here</span>
+        <span class="cmt"># -  Your script logic here</span>
         <span class="kw">$this</span>-><span class="kw">_logger</span>-><span class="fn">_echo</span>(<span class="str">"Script completed!"</span>);
     }
 }</code></pre>

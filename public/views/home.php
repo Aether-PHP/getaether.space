@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Aether PHP :: The Divine Lightweight PHP Framework </title>
         <meta name="description" content="Under 1MB. Zero dependencies. Pure PHP 8.3+. Built from scratch. No bloat. Explicit security.">
+        <link href="public/img/icon.jpg" rel="icon" type="image/png">
         <link rel="stylesheet" href="/public/css/home.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
