@@ -6,9 +6,9 @@
     <title>Aether PHP :: Documentation</title>
     <meta name="description" content="Full documentation for the Aether PHP framework. Routing, Auth, Middleware, Sessions, Database, CLI and more.">
     <link rel="stylesheet" href="/public/css/docs.css">
-    <link rel="preconnect" href="https:# - fonts.googleapis.com">
-    <link rel="preconnect" href="https:# - fonts.gstatic.com" crossorigin>
-    <link href="https:# - fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
         </div>
         <div class="topnav__right">
             <a href="/" class="topnav__link">Home</a>
-            <a href="https:# - github.com/Aether-PHP/Aether-PHP" class="topnav__link" target="_blank" rel="noopener">GitHub ↗</a>
+            <a href="https://github.com/Aether-PHP/Aether-PHP" class="topnav__link" target="_blank" rel="noopener">GitHub ↗</a>
             <a class="topnav__version">v1.x</a>
         </div>
         <button class="topnav__burger" id="topnav-burger" aria-label="Toggle sidebar">
@@ -255,7 +255,7 @@
                                     <span class="code-card__title">Terminal</span>
                                     <div class="code-card__dots"><span></span><span></span><span></span></div>
                                 </div>
-                                <pre class="code-block"><code>git clone https:# - github.com/Aether-PHP/Aether-PHP
+                                <pre class="code-block"><code>git clone https://github.com/Aether-PHP/Aether-PHP
 cd Aether-PHP</code></pre>
                             </div>
                         </div>
@@ -1233,7 +1233,7 @@ MAINTENANCE=false</code></pre>
                     </div>
                     <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Http</span>\<span class="fn">HttpParameterTypeEnum</span>;
 
-<span class="cmt"># JSON body (php:# - input)</span>
+<span class="cmt"># JSON body (php://input)</span>
 <span class="kw">$params</span> = <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_parameters</span>(<span class="fn">HttpParameterTypeEnum</span>::PHP_INPUT);
 
 <span class="kw">$email</span> = <span class="kw">$params</span>-><span class="fn">_getAttribute</span>(<span class="str">'email'</span>);
@@ -1277,7 +1277,7 @@ MAINTENANCE=false</code></pre>
 
 <span class="kw">$request</span> = <span class="fn">Aether</span>()-><span class="fn">_http</span>()-><span class="fn">_request</span>(
     <span class="fn">HttpMethodEnum</span>::GET,
-    <span class="str">'https:# - api.example.com/users'</span>
+    <span class="str">'https://api.example.com/users'</span>
 );
 
 <span class="kw">$response</span> = <span class="kw">$request</span>-><span class="fn">_send</span>();</code></pre>
@@ -1341,10 +1341,10 @@ MAINTENANCE=false</code></pre>
                         <span class="code-card__title">JavaScript example</span>
                         <div class="code-card__dots"><span></span><span></span><span></span></div>
                     </div>
-                    <pre class="code-block"><code><span class="cmt"># -  Get token from header (set automatically on GET requests)</span>
+                    <pre class="code-block"><code><span class="cmt">// Get token from header (set automatically on GET requests)</span>
 <span class="kw">const</span> token = response.headers.<span class="fn">get</span>(<span class="str">'X-CSRF-Token'</span>);
 
-<span class="cmt"># -  Include in POST request</span>
+<span class="cmt">// Include in POST request</span>
 <span class="fn">fetch</span>(<span class="str">'/api/users'</span>, {
     method: <span class="str">'POST'</span>,
     headers: {
@@ -1388,12 +1388,12 @@ MAINTENANCE=false</code></pre>
 <span class="kw">class</span> <span class="fn">LoggingMiddleware</span> <span class="kw">implements</span> <span class="fn">MiddlewareInterface</span> {
 
     <span class="kw">public function</span> <span class="fn">_handle</span>(<span class="kw">callable</span> <span class="kw">$_next</span>) {
-        <span class="cmt"># -  Code before controller execution</span>
+        <span class="cmt">// Code before controller execution</span>
         <span class="fn">error_log</span>(<span class="str">'Request: '</span> . <span class="kw">$_SERVER</span>[<span class="str">'REQUEST_URI'</span>]);
 
-        <span class="kw">$_next</span>(); <span class="cmt"># -  Call next middleware or controller</span>
+        <span class="kw">$_next</span>(); <span class="cmt">// Call next middleware or controller</span>
 
-        <span class="cmt"># -  Code after controller execution</span>
+        <span class="cmt">// Code after controller execution</span>
         <span class="fn">error_log</span>(<span class="str">'Response sent'</span>);
     }
 }</code></pre>
@@ -1409,7 +1409,7 @@ MAINTENANCE=false</code></pre>
                     <pre class="code-block"><code><span class="kw">private static</span> <span class="kw">$_middlewares</span> = [
     <span class="fn">LoggingMiddleware</span>::<span class="kw">class</span>,
     <span class="fn">RatelimitMiddleware</span>::<span class="kw">class</span>,
-    <span class="cmt"># -  ... other middlewares</span>
+    <span class="cmt">// ... other middlewares</span>
 ];</code></pre>
                 </div>
 
@@ -1567,7 +1567,7 @@ MAINTENANCE=false</code></pre>
     <span class="cmt">/** @var array $_modules */</span>
     <span class="kw">private static</span> <span class="kw">array</span> <span class="kw">$_modules</span> = [
         <span class="fn">Analytics</span>::<span class="kw">class</span>,
-        <span class="cmt"># -  Add other modules here (I18n, CLI, etc.)</span>
+        <span class="cmt">// Add other modules here (I18n, CLI, etc.)</span>
     ];
 
     <span class="kw">public static function</span> <span class="fn">_init</span>() : <span class="kw">void</span> {
@@ -1899,7 +1899,7 @@ echo "Setup complete!"</code></pre>
     }
 
     <span class="kw">public function</span> <span class="fn">_onRun</span>() {
-        <span class="cmt"># -  Your script logic here</span>
+        <span class="cmt">// Your script logic here</span>
         <span class="kw">$this</span>-><span class="kw">_logger</span>-><span class="fn">_echo</span>(<span class="str">"Script completed!"</span>);
     }
 }</code></pre>
