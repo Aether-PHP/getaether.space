@@ -71,6 +71,14 @@
                 </div>
 
                 <div class="sidenav__group">
+                    <div class="sidenav__group-label">Core Concepts</div>
+                    <a href="#core-architecture" class="sidenav__link" data-section="core-architecture">Framework Architecture</a>
+                    <a href="#request-lifecycle" class="sidenav__link" data-section="request-lifecycle">Request Lifecycle</a>
+                    <a href="#services-overview" class="sidenav__link" data-section="services-overview">Service Manager &amp; Hubs</a>
+                    <a href="#modules-overview" class="sidenav__link" data-section="modules-overview">Modules System</a>
+                </div>
+
+                <div class="sidenav__group">
                     <div class="sidenav__group-label">Routing</div>
                     <a href="#routing-basics" class="sidenav__link" data-section="routing-basics">Understanding Routes</a>
                     <a href="#first-route" class="sidenav__link" data-section="first-route">Creating Your First Route</a>
@@ -141,6 +149,7 @@
                 <div class="sidenav__group">
                     <div class="sidenav__group-label">Modules</div>
                     <a href="#modules-analytics" class="sidenav__link" data-section="modules-analytics">HTTP Analytics Module</a>
+                    <a href="#modules-building" class="sidenav__link" data-section="modules-building">Building a Module</a>
                 </div>
 
                 <div class="sidenav__group">
@@ -380,6 +389,124 @@ MAINTENANCE=false</code></pre>
                 </div>
 
                 <p>The <code>_get()</code> method returns the value from <code>$_ENV</code> array. If the key doesn't exist, it returns null.</p>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="core-architecture">
+                <div class="doc-section__label">Core Concepts</div>
+                <h1 class="doc-section__h1">Framework Architecture</h1>
+                <p class="doc-section__lead">
+                    Aether-PHP is organized around a very small core, an application layer, and optional modules. Understanding this structure makes it easier to navigate the source and extend the framework safely.
+                </p>
+
+                <h2>High-level layout</h2>
+                <ul>
+                    <li><code>public/</code> – front controller (<code>index.php</code>), assets and public views</li>
+                    <li><code>src/Aether/</code> – framework core (routing, HTTP layer, middleware, database, auth, IO, cache, sessions, modules)</li>
+                    <li><code>app/App/</code> – your application code (controllers, configuration of middlewares, modules, etc.)</li>
+                    <li><code>src/Aether/Modules/</code> – optional modules (CLI, i18n, analytics, ...)</li>
+                </ul>
+
+                <p>
+                    The heart of the framework is the <code>\Aether\Aether</code> class. It is responsible for booting the environment,
+                    loading configuration and sessions, initializing your <code>App\App</code> class, running global middlewares, and finally
+                    dispatching the request to the right controller via the router.
+                </p>
+
+                <div class="callout callout--info">
+                    <div class="callout__icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="callout__body">
+                        You can always start from <code>public/index.php</code>, then jump into <code>\Aether\Aether</code> and <code>App\App</code> to
+                        follow the complete flow of a request inside the framework.
+                    </div>
+                </div>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="request-lifecycle">
+                <div class="doc-section__label">Core Concepts</div>
+                <h1 class="doc-section__h1">Request Lifecycle</h1>
+                <p class="doc-section__lead">
+                    Every HTTP request goes through a predictable pipeline: environment bootstrap, middleware execution, routing, controller,
+                    and finally a typed response.
+                </p>
+
+                <h2>Step-by-step flow</h2>
+                <ol>
+                    <li><strong>Front controller</strong> – <code>public/index.php</code> loads <code>autoload.php</code> and creates <code>\Aether\Aether</code>.</li>
+                    <li><strong>Core boot</strong> – <code>\Aether\Aether-&gt;_run()</code> enables dev mode if needed, loads <code>.env</code> with <code>ProjectConfig</code> and boots sessions.</li>
+                    <li><strong>Application init</strong> – <code>App\App::_init()</code> registers modules and the list of global middlewares.</li>
+                    <li><strong>Middleware pipeline</strong> – all global middlewares are executed in order using the <code>Pipeline</code> component.</li>
+                    <li><strong>Routing</strong> – the <code>Router</code> and <code>ControllerGateway</code> locate the correct controller method based on annotations.</li>
+                    <li><strong>Controller execution</strong> – your controller method runs, can talk to services, database, views, etc.</li>
+                    <li><strong>Response</strong> – a typed <code>HttpResponse</code> (JSON, HTML, XML, ... ) is sent back to the client.</li>
+                </ol>
+
+                <p>
+                    If no route matches the current URL, the router automatically sends a <code>404 Not Found</code> response. If a controller or
+                    annotation is invalid, a dedicated framework exception is thrown (for example <code>RouterControllerException</code>).
+                </p>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="services-overview">
+                <div class="doc-section__label">Core Concepts</div>
+                <h1 class="doc-section__h1">Service Manager &amp; Hubs</h1>
+                <p class="doc-section__lead">
+                    Instead of a hidden container, Aether-PHP exposes a single Service Manager entry point that gives you access to strongly-typed service hubs.
+                </p>
+
+                <p>
+                    Anywhere in your code, you can call the global <code>Aether()</code> helper (or use <code>\Aether\Aether::_getServices()</code>)
+                    to retrieve the Service Manager. From there, you access dedicated hubs:
+                </p>
+
+                <ul>
+                    <li><code>_db()</code> – database hub (MySQL / SQLite) with the fluent QueryBuilder</li>
+                    <li><code>_http()</code> – HTTP hub (request + response objects)</li>
+                    <li><code>_session()</code> – sessions and authentication gateway</li>
+                    <li><code>_cache()</code> – APCU-based cache layer (and future adapters)</li>
+                    <li><code>_io()</code> – files and folders abstraction layer</li>
+                    <li><code>_config()</code> – read-only access to configuration values</li>
+                </ul>
+
+                <p>
+                    This pattern keeps all framework services discoverable and makes refactoring easier: you do not have to guess where things are
+                    injected, you follow the service hubs from the Aether entry point.
+                </p>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="modules-overview">
+                <div class="doc-section__label">Core Concepts</div>
+                <h1 class="doc-section__h1">Modules System Overview</h1>
+                <p class="doc-section__lead">
+                    Modules are optional, isolated packages that extend the core framework without adding Composer dependencies.
+                </p>
+
+                <p>
+                    A module is simply a PHP class extending <code>Aether\Modules\AetherModule</code>, placed under <code>src/Aether/Modules/YourModule/</code>,
+                    usually alongside a <code>module.yml</code> file that describes the module. During <code>App::_init()</code>, the <code>ModuleFactory</code>
+                    instantiates each module and calls its <code>_onLoad()</code> hook.
+                </p>
+
+                <h2>Typical module structure</h2>
+                <ul>
+                    <li><code>src/Aether/Modules/AetherCLI/</code> – CLI commands and tooling</li>
+                    <li><code>src/Aether/Modules/I18n/</code> – translation layer and helper functions</li>
+                    <li><code>src/Aether/Modules/Analytics/</code> – HTTP analytics &amp; statistics (documented below)</li>
+                </ul>
+
+                <p>
+                    To enable a module, add its class to the <code>$_modules</code> array in <code>App\App</code>. Modules can internally register
+                    their own services, commands, or listeners while still using the same Service Manager as the rest of your app.
+                </p>
             </section>
 
             <div class="doc-divider"></div>
@@ -1614,6 +1741,138 @@ MAINTENANCE=false</code></pre>
                     </div>
                     <div class="callout__body">
                         The Analytics module relies on the internal QueryBuilder and can live alongside your own SQLite or MySQL connections without extra configuration.
+                    </div>
+                </div>
+            </section>
+
+            <div class="doc-divider"></div>
+
+            <section class="doc-section" id="modules-building">
+                <div class="doc-section__label">Modules</div>
+                <h1 class="doc-section__h1">Building a Module from Scratch</h1>
+                <p class="doc-section__lead">
+                    Modules let you package reusable features (CLI tools, integrations, background jobs, etc.) without coupling them to a single project.
+                    This guide walks you through creating a minimal Aether module step by step.
+                </p>
+
+                <h2>1. Create the folder structure</h2>
+                <p>Create a new directory for your module under <code>src/Aether/Modules</code>:</p>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">Folder structure</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code>src/
+  Aether/
+    Modules/
+      MyModule/
+        module.yml
+        src/
+          MyModule.php
+          Service/
+            MyService.php</code></pre>
+                </div>
+
+                <p>
+                    The only hard requirement is the main PHP class extending <code>Aether\Modules\AetherModule</code>. The rest of the structure
+                    is up to you, but keeping a <code>src/</code> folder per module keeps things clean.
+                </p>
+
+                <h2>2. Describe the module (module.yml)</h2>
+                <p>Add a simple <code>module.yml</code> file to document your module:</p>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">src/Aether/Modules/MyModule/module.yml</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code>name: my-module
+description: Custom business features for my app
+version: 1.0.0</code></pre>
+                </div>
+
+                <p>This file is not required by the core, but it is used by existing modules and is a good convention to follow.</p>
+
+                <h2>3. Implement the module class</h2>
+                <p>Create your main module class extending <code>AetherModule</code>:</p>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">src/Aether/Modules/MyModule/src/MyModule.php</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="kw">&lt;?php</span>
+<span class="kw">declare</span>(<span class="kw">strict_types</span>=1);
+
+<span class="kw">namespace</span> <span class="fn">Aether</span>\<span class="fn">Modules</span>\<span class="fn">MyModule</span>;
+
+<span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Modules</span>\<span class="fn">AetherModule</span>;
+
+<span class="kw">final class</span> <span class="fn">MyModule</span> <span class="kw">extends</span> <span class="fn">AetherModule</span>
+{
+    <span class="kw">public static function</span> <span class="fn">_make</span>() : <span class="kw">self</span>
+    {
+        <span class="cmt"># Factory method used by ModuleFactory</span>
+        <span class="kw">return new self</span>();
+    }
+
+    <span class="kw">public function</span> <span class="fn">_onLoad</span>() : <span class="kw">void</span>
+    {
+        <span class="cmt"># This is called once when the module is loaded at app boot.</span>
+        <span class="cmt"># Register services, hooks, or perform initialization here.</span>
+    }
+}</code></pre>
+                </div>
+
+                <p>
+                    The <code>_make()</code> factory is used by <code>ModuleFactory::_load()</code> to instantiate your module. The <code>_onLoad()</code>
+                    method is your entry point to plug into the rest of the framework.
+                </p>
+
+                <h2>4. Register the module in your App</h2>
+                <p>In <code>app/App/App.php</code>, add your module class to the <code>$_modules</code> array:</p>
+
+                <div class="code-card">
+                    <div class="code-card__header">
+                        <span class="code-card__title">app/App/App.php</span>
+                        <div class="code-card__dots"><span></span><span></span><span></span></div>
+                    </div>
+                    <pre class="code-block"><code><span class="kw">use</span> <span class="fn">Aether</span>\<span class="fn">Modules</span>\<span class="fn">MyModule</span>\<span class="fn">MyModule</span>;
+
+<span class="kw">class</span> <span class="fn">App</span> {
+
+    <span class="kw">private static</span> <span class="kw">array</span> <span class="kw">$_modules</span> = [
+        <span class="fn">MyModule</span>::<span class="kw">class</span>,
+        <span class="cmt">// Analytics::class, I18N::class, ...</span>
+    ];
+
+    <span class="kw">public static function</span> <span class="fn">_init</span>() : <span class="kw">void</span> {
+        <span class="fn">ModuleFactory</span>::<span class="fn">_load</span>(<span class="kw">self</span>::<span class="kw">$_modules</span>);
+        <span class="cmt"># Other boot logic...</span>
+    }
+}</code></pre>
+                </div>
+
+                <p>On the next request, your module will be instantiated and its <code>_onLoad()</code> method will be executed once.</p>
+
+                <h2>5. Expose functionality from your module</h2>
+                <p>Inside <code>_onLoad()</code>, you typically:</p>
+
+                <ul>
+                    <li>Register additional routes (by adding controllers under <code>app/App/Controller</code> or <code>app/App/Controller/Api</code>)</li>
+                    <li>Register CLI commands (if you integrate with the CLI module)</li>
+                    <li>Initialize databases or storage used by your module</li>
+                    <li>Attach middlewares or listeners using existing framework hooks</li>
+                </ul>
+
+                <div class="callout callout--info">
+                    <div class="callout__icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="callout__body">
+                        Keep modules small and focused. If a feature can be reused across several projects, consider extracting it into its own module.
+                        Use the same service hubs (<code>Aether()-&gt;_db()</code>, <code>Aether()-&gt;_io()</code>, <code>Aether()-&gt;_cache()</code>, ...) from inside your module.
                     </div>
                 </div>
             </section>
